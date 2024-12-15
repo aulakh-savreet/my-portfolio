@@ -6,10 +6,9 @@ import Link from 'next/link';
 import { HiArrowUpRight } from 'react-icons/hi2';
 import styles from './Header.module.css';
 
-const navItems = ['info', 'work'];
-
 const Header = () => {
   const { activeSection, setActiveSection } = useSection();
+  const navItems = ['info', 'work'];
 
   return (
     <header className={styles.header}>
@@ -27,7 +26,7 @@ const Header = () => {
               onClick={() => setActiveSection(item)}
             >
               {item.charAt(0).toUpperCase() + item.slice(1)}
-              {activeSection === item && <span className={styles.indicator} />}
+              {activeSection === item && <div className={styles.indicator} />}
             </button>
           ))}
         </div>
