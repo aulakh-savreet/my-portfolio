@@ -1,9 +1,15 @@
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2.5rem 3rem;
-  width: 100%;
+  padding: 1rem 2rem;
+  box-shadow: none;
 }
 
 .left {
@@ -13,7 +19,7 @@
 }
 
 .name {
-  font-size: 1.625rem;
+  font-size: 1.25rem;
   font-weight: 450;
   color: rgba(255, 255, 255, 0.95);
   margin: 0;
@@ -21,7 +27,7 @@
 }
 
 .subtitle {
-  font-size: 0.9375rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.45);
   margin: 0;
   font-weight: 400;
@@ -29,17 +35,16 @@
 }
 
 .centerNav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
 }
 
+/* Only modified the size and background opacity here */
 .navGroup {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   position: relative;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
   padding: 0.25rem;
   border-radius: 100px;
   backdrop-filter: blur(8px);
@@ -48,9 +53,9 @@
 .navButton {
   position: relative;
   flex: 1;
-  padding: 0.75rem 1.75rem;
+  padding: 0.5rem 1.25rem;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1.125rem;
+  font-size: 0.875rem;
   border: none;
   background: none;
   border-radius: 100px;
@@ -70,20 +75,20 @@
 
 .navButton .indicator {
   position: absolute;
-  top: -7px;
+  top: -5px;
   left: 50%;
   transform: translateX(-50%);
   width: 30px;
-  height: 3px;
+  height: 2px;
   background-color: #ffffff;
   border-radius: 4px 4px 0 0;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 
               0 0 20px rgba(255, 255, 255, 0.5);
   transition: 
-    transform 5s cubic-bezier(0.4, 0, 0.2, 1),
-    left 2.5s cubic-bezier(0.4, 0, 0.2, 1),
-    width 2.5s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center;
   will-change: transform;
 }

@@ -24,15 +24,9 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Bio Section */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start mt-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
                 <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-white/5 w-full max-w-md mx-auto" />
-                <div className="space-y-6 max-w-lg mx-auto">
-                  <h2 className="text-3xl font-[350]">Hi, I'm Savreet</h2>
-                  <p className="text-xl text-white/80 leading-relaxed">
-                    I'm a product designer specializing in creating user-centered design solutions.
-                  </p>
-                </div>
+                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-white/5 w-full max-w-md mx-auto" />
               </div>
             </motion.div>
           ) : (
@@ -42,19 +36,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
-              <div className="flex items-center gap-2 mb-12">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                <span className="text-sm text-gray-500 tracking-widest">ABOUT ME</span>
-              </div>
-              
-              <h1 className="text-[4rem] leading-[1.1] font-light text-white max-w-[700px]">
-                I'm passionate about creating beautiful products that{' '}
-                <span className="italic text-gray-400">empower people.</span>
-              </h1>
-              
-              <div className="mt-32">
-                <InfoSection />
-              </div>
+              <InfoSection />
             </motion.div>
           )}
         </AnimatePresence>
