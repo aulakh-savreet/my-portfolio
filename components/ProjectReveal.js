@@ -1,4 +1,4 @@
-// components/ProjectReveal.js
+// ProjectReveal.js
 import { useRef, useEffect } from 'react';
 
 export default function ProjectReveal({ hero, projects }) {
@@ -7,37 +7,47 @@ export default function ProjectReveal({ hero, projects }) {
   useEffect(() => {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
-    if (!gsap || !ScrollTrigger) {
-      console.error('GSAP or ScrollTrigger not found.');
-      return;
-    }
+    if (!gsap || !ScrollTrigger) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
     const overlays = containerRef.current.querySelectorAll('.project-overlay');
+    const contents = containerRef.current.querySelectorAll('.content-wrapper');
+    const viewMoreBtns = containerRef.current.querySelectorAll('.view-more-wrapper');
 
-    // Create a timeline that pins the entire container
-    // so the hero stays behind everything while we scroll
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top top',
-        end: () => `+=${projects.length * 100}%`, 
+        end: () => `+=${projects.length * 200}%`,
         pin: true,
-        scrub: true,
-        // markers: true, // debug markers if needed
+        scrub: 1,
       },
+      ease: 'power2.inOut',
     });
 
-    // For each overlay, animate from bottom to covering the hero
     overlays.forEach((overlay, i) => {
-      // Each overlay gets ~1 "screen" worth of scrolling
-      // so total scroll distance is (# overlays * 100%).
+      // Container grows and slides up
       tl.fromTo(
         overlay,
-        { y: '100%' },
+        { 
+          y: '100%',
+          scale: 0.8 
+        },
+        { 
+          y: '0%',
+          scale: 1,
+          duration: 1 
+        },
+        i
+      );
+
+      // Content moves opposite
+      tl.fromTo(
+        contents[i],
+        { y: '-50%' },
         { y: '0%', duration: 1 },
-        i // place each overlay’s animation at time index = i
+        i
       );
     });
 
@@ -50,34 +60,49 @@ export default function ProjectReveal({ hero, projects }) {
     <div
       ref={containerRef}
       className="relative w-full"
-      style={{ height: `${(projects.length + 1) * 100}vh` }}
+      style={{ 
+        height: `${(projects.length + 1) * 100}vh`,
+        zIndex: 1,
+        pointerEvents: 'none'
+      }}
     >
-      {/* HERO (z-index 1) */}
-      <div className="absolute w-full h-screen top-0 left-0 z-10">
-        {hero /* This is your <HeroSection /> component */}
+      {/* The Hero behind everything */}
+      <div className="absolute w-full h-screen top-0 left-0 overflow-hidden">
+        {hero}
       </div>
 
-      {/* PROJECT OVERLAYS (z-index 20) */}
-      {projects.map((project, i) => (
+      {/* Overlays in front of hero */}
+      {projects.map((project) => (
         <div
           key={project.id}
-          className="project-overlay absolute w-full h-screen z-20"
-          style={{
+          className="project-overlay absolute w-full h-screen"
+          style={{ 
             top: 0,
+            pointerEvents: 'auto' 
           }}
         >
-          {/* Example layout: two columns or whatever you like */}
-          <div className="h-full flex items-center justify-between p-16 bg-white">
-            <div className="flex-1">
-              <h2 className="text-6xl font-black mb-4">{project.title}</h2>
-              <p className="max-w-md text-lg">{project.description}</p>
+          <div className="h-full bg-white">
+            {/* Content wrapper - will move opposite to container */}
+            <div className="content-wrapper h-full flex items-center justify-between p-16">
+              <div className="flex-1">
+                <h2 className="text-6xl font-black mb-4">{project.title}</h2>
+                <p className="max-w-md text-lg">{project.description}</p>
+              </div>
+              <div className="flex-1 flex justify-end">
+                <img
+                  src={project.imageSrc}
+                  alt={project.title}
+                  className="w-2/3 object-cover"
+                />
+              </div>
             </div>
-            <div className="flex-1 flex justify-end">
-              <img
-                src={project.imageSrc}
-                alt={project.title}
-                className="w-2/3 object-cover"
-              />
+
+            {/* View More text */}
+            <div className="view-more-wrapper absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-end">
+              <button className="text-lg uppercase tracking-wider hover:opacity-75 transition-opacity">
+                <span className="block">View</span>
+                <span className="block">More</span>
+              </button>
             </div>
           </div>
         </div>
