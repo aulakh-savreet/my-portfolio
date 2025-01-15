@@ -1,4 +1,3 @@
-// BlackHoleText.js
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
@@ -9,23 +8,36 @@ export default function BlackHoleText() {
   useEffect(() => {
     let environment;
 
-    const preload = () => {
+    const preload = async () => {
       const manager = new THREE.LoadingManager();
-      manager.onLoad = function() { 
-        environment = new Environment(typo, particle);
+      
+      const loadFont = () => {
+        return new Promise((resolve) => {
+          const loader = new FontLoader(manager);
+          // Using Helvetiker Bold font for better clarity
+          loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', (font) => {
+            setTimeout(() => resolve(font), 500);
+          });
+        });
       };
 
-      let typo = null;
-      const loader = new FontLoader(manager);
-      const fontUrl = 'https://res.cloudinary.com/dydre7amr/raw/upload/v1612950355/font_zsd4dr.json';
-      
-      loader.load(fontUrl, function(font) { 
-        typo = font; 
-      });
+      const loadTexture = () => {
+        return new Promise((resolve) => {
+          const textureLoader = new THREE.TextureLoader(manager);
+          textureLoader.load('https://res.cloudinary.com/dfvtkoboz/image/upload/v1605013866/particle_a64uzf.png', (texture) => {
+            setTimeout(() => resolve(texture), 500);
+          });
+        });
+      };
 
-      const particle = new THREE.TextureLoader(manager).load(
-        'https://res.cloudinary.com/dfvtkoboz/image/upload/v1605013866/particle_a64uzf.png'
-      );
+      try {
+        const [font, particle] = await Promise.all([loadFont(), loadTexture()]);
+        if (font && particle) {
+          environment = new Environment(font, particle);
+        }
+      } catch (error) {
+        console.error('Error loading resources:', error);
+      }
     };
 
     class Environment {
@@ -38,10 +50,6 @@ export default function BlackHoleText() {
         this.createRenderer();
         this.setup();
         this.bindEvents();
-      }
-
-      bindEvents() {
-        window.addEventListener('resize', this.onWindowResize.bind(this));
       }
 
       setup() {
@@ -72,21 +80,23 @@ export default function BlackHoleText() {
       createRenderer() {
         this.renderer = new THREE.WebGLRenderer({ 
           alpha: true,
-          antialias: true
+          antialias: true 
         });
         this.renderer.setSize(
           this.container.clientWidth,
           this.container.clientHeight
         );
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.container.appendChild(this.renderer.domElement);
         this.renderer.setAnimationLoop(() => this.render());
       }
 
+      bindEvents() {
+        window.addEventListener('resize', this.onWindowResize.bind(this));
+      }
+
       onWindowResize() {
-        this.camera.aspect =
-          this.container.clientWidth / this.container.clientHeight;
+        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(
           this.container.clientWidth,
@@ -102,19 +112,20 @@ export default function BlackHoleText() {
         this.particleImg = particleImg;
         this.camera = camera;
         this.renderer = renderer;
-
+        
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2(-200, 200);
-        this.colorChange = new THREE.Color(0x000000);
+        this.colorChange = new THREE.Color();
+        this.buttom = false;
 
         this.data = {
-          text: 'EVOLVE\nWITH\nINTENT',
-          amount: 2500,
-          particleSize: 1.8,
-          particleColor: 0x000000,
-          textSize: 18,
-          area: 120,
-          ease: .03,
+          text: 'SAVREET',  // Changed text to SAVREET
+          amount: 3000,
+          particleSize: 2,
+          particleColor: 0xffffff,  // Changed color to white
+          textSize: 24,
+          area: 250,
+          ease: 0.1,
         };
 
         this.setup();
@@ -123,143 +134,61 @@ export default function BlackHoleText() {
 
       setup() {
         const geometry = new THREE.PlaneGeometry(
-          this.visibleWidthAtZDepth(100, this.camera),
-          this.visibleHeightAtZDepth(100, this.camera)
+          this.visibleWidthAtZDepth(120, this.camera),
+          this.visibleHeightAtZDepth(120, this.camera)
         );
         const material = new THREE.MeshBasicMaterial({
-          color: 0x000000,
-          transparent: true,
-          opacity: 0
+          color: 0x06AF6E,
+          transparent: true
         });
         this.planeArea = new THREE.Mesh(geometry, material);
+        this.planeArea.visible = false;
+        this.scene.add(this.planeArea);
         this.createText();
-      }
-
-      bindEvents() {
-        document.addEventListener('mousemove', this.onMouseMove.bind(this));
-      }
-
-      onMouseMove(event) {
-        const rect = this.renderer.domElement.getBoundingClientRect();
-        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-      }
-
-      render() {
-        this.raycaster.setFromCamera(this.mouse, this.camera);
-        const intersects = this.raycaster.intersectObject(this.planeArea);
-
-        if (intersects.length > 0) {
-          const pos = this.particles.geometry.attributes.position;
-          const copy = this.geometryCopy.attributes.position;
-          const colors = this.particles.geometry.attributes.customColor;
-          const size = this.particles.geometry.attributes.size;
-
-          const mx = intersects[0].point.x;
-          const my = intersects[0].point.y;
-          const mz = intersects[0].point.z;
-
-          for (let i = 0, l = pos.count; i < l; i++) {
-            const initX = copy.getX(i);
-            const initY = copy.getY(i);
-            const initZ = copy.getZ(i);
-
-            let px = pos.getX(i);
-            let py = pos.getY(i);
-            let pz = pos.getZ(i);
-
-            colors.setXYZ(i, 0, 0, 0);
-            colors.needsUpdate = true;
-
-            size.array[i] = this.data.particleSize;
-            size.needsUpdate = true;
-
-            let dx = mx - px;
-            let dy = my - py;
-            const dz = mz - pz;
-
-            const mouseDistance = this.distance(mx, my, px, py);
-            const d = (dx = mx - px) * dx + (dy = my - py) * dy;
-            const f = -this.data.area / d;
-
-            if (mouseDistance < this.data.area) {
-              const t = Math.atan2(dy, dx);
-              px -= f * Math.cos(t);
-              py -= f * Math.sin(t);
-
-              colors.setXYZ(i, 0, 0, 0);
-              colors.needsUpdate = true;
-
-              if (i % 5 == 0) {
-                const t = Math.atan2(dy, dx);
-                px -= .03 * Math.cos(t);
-                py -= .03 * Math.sin(t);
-
-                size.array[i] = this.data.particleSize / 1.2;
-                size.needsUpdate = true;
-              }
-            }
-
-            px += (initX - px) * this.data.ease;
-            py += (initY - py) * this.data.ease;
-            pz += (initZ - pz) * this.data.ease;
-
-            pos.setXYZ(i, px, py, pz);
-            pos.needsUpdate = true;
-          }
-        }
       }
 
       createText() {
         let thePoints = [];
+        let colors = [];
+        let sizes = [];
 
         let shapes = this.font.generateShapes(this.data.text, this.data.textSize);
         let geometry = new THREE.ShapeGeometry(shapes);
         geometry.computeBoundingBox();
 
-        const xMid = -this.visibleWidthAtZDepth(100, this.camera) / 4;
-        const yMid = (geometry.boundingBox.max.y - geometry.boundingBox.min.y) / 2.5;
+        const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+        const yMid = (geometry.boundingBox.max.y - geometry.boundingBox.min.y) / 2.85;
 
         geometry.center();
 
-        let holeShapes = [];
-
-        for (let q = 0; q < shapes.length; q++) {
-          let shape = shapes[q];
+        shapes.forEach(shape => {
           if (shape.holes && shape.holes.length > 0) {
-            for (let j = 0; j < shape.holes.length; j++) {
-              let hole = shape.holes[j];
-              holeShapes.push(hole);
-            }
+            shapes.push(...shape.holes);
           }
-        }
-        shapes.push.apply(shapes, holeShapes);
 
-        let colors = [];
-        let sizes = [];
-
-        for (let x = 0; x < shapes.length; x++) {
-          let shape = shapes[x];
-          const amountPoints = shape.type == 'Path' ? this.data.amount / 2 : this.data.amount;
-          let points = shape.getSpacedPoints(amountPoints);
-
-          points.forEach((element, z) => {
-            const a = new THREE.Vector3(element.x, element.y, 0);
-            thePoints.push(a);
-            colors.push(this.colorChange.r, this.colorChange.g, this.colorChange.b);
-            sizes.push(1.2);
+          const points = shape.getSpacedPoints(this.data.amount);
+          points.forEach(element => {
+            thePoints.push(new THREE.Vector3(element.x, element.y, 0));
+            colors.push(1, 1, 1);  // White color (R,G,B all set to 1)
+            sizes.push(1);
           });
-        }
+        });
 
         let geoParticles = new THREE.BufferGeometry().setFromPoints(thePoints);
         geoParticles.translate(xMid, yMid, 0);
-
-        geoParticles.setAttribute('customColor', new THREE.Float32BufferAttribute(colors, 3));
-        geoParticles.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+        
+        geoParticles.setAttribute(
+          'customColor',
+          new THREE.Float32BufferAttribute(colors, 3)
+        );
+        geoParticles.setAttribute(
+          'size',
+          new THREE.Float32BufferAttribute(sizes, 1)
+        );
 
         const material = new THREE.ShaderMaterial({
           uniforms: {
-            color: { value: new THREE.Color(0x000000) },
+            color: { value: new THREE.Color(0xffffff) },
             pointTexture: { value: this.particleImg }
           },
           vertexShader: `
@@ -279,7 +208,7 @@ export default function BlackHoleText() {
             varying vec3 vColor;
             void main() {
               vec4 texColor = texture2D(pointTexture, gl_PointCoord);
-              gl_FragColor = vec4(0.0, 0.0, 0.0, texColor.a);
+              gl_FragColor = vec4(1.0, 1.0, 1.0, texColor.a);
             }
           `,
           blending: THREE.AdditiveBlending,
@@ -292,6 +221,101 @@ export default function BlackHoleText() {
 
         this.geometryCopy = new THREE.BufferGeometry();
         this.geometryCopy.copy(this.particles.geometry);
+      }
+
+      // Rest of the original functions remain unchanged
+      bindEvents() {
+        const handleInteraction = (e) => {
+          if (window.scrollY > window.innerHeight) return;
+          
+          if (e.type === 'mousedown') this.onMouseDown(e);
+          else if (e.type === 'mousemove') this.onMouseMove(e);
+          else if (e.type === 'mouseup') this.onMouseUp(e);
+        };
+
+        document.addEventListener('mousedown', handleInteraction);
+        document.addEventListener('mousemove', handleInteraction);
+        document.addEventListener('mouseup', handleInteraction);
+      }
+
+      onMouseDown(event) {
+        this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        this.buttom = true;
+        this.data.ease = 0.01;
+      }
+
+      onMouseUp() {
+        this.buttom = false;
+        this.data.ease = 0.05;
+      }
+
+      onMouseMove(event) {
+        this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      }
+
+      render() {
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObject(this.planeArea);
+
+        if (intersects.length > 0) {
+          const pos = this.particles.geometry.attributes.position;
+          const copy = this.geometryCopy.attributes.position;
+          const colors = this.particles.geometry.attributes.customColor;
+          const size = this.particles.geometry.attributes.size;
+
+          const mx = intersects[0].point.x;
+          const my = intersects[0].point.y;
+
+          for (let i = 0; i < pos.count; i++) {
+            const initX = copy.getX(i);
+            const initY = copy.getY(i);
+            const initZ = copy.getZ(i);
+
+            let px = pos.getX(i);
+            let py = pos.getY(i);
+            let pz = pos.getZ(i);
+
+            const dx = mx - px;
+            const dy = my - py;
+            const mouseDistance = this.distance(mx, my, px, py);
+            const d = dx * dx + dy * dy;
+            const f = -this.data.area / d;
+
+            if (this.buttom) {
+              const t = Math.atan2(dy, dx);
+              px -= f * Math.cos(t);
+              py -= f * Math.sin(t);
+              colors.setXYZ(i, 1, 1, 1);  // Keep white color
+            } else if (mouseDistance < this.data.area) {
+              if (i % 5 === 0) {
+                const t = Math.atan2(dy, dx);
+                px -= 0.03 * Math.cos(t);
+                py -= 0.03 * Math.sin(t);
+                size.array[i] = this.data.particleSize / 1.2;
+              } else {
+                const t = Math.atan2(dy, dx);
+                px += f * Math.cos(t);
+                py += f * Math.sin(t);
+                size.array[i] = this.data.particleSize * 1.3;
+              }
+
+              colors.setXYZ(i, 1, 1, 1);  // Keep white color
+              size.array[i] = this.data.particleSize / 1.8;
+            }
+
+            px += (initX - px) * this.data.ease;
+            py += (initY - py) * this.data.ease;
+            pz += (initZ - pz) * this.data.ease;
+
+            pos.setXYZ(i, px, py, pz);
+          }
+
+          pos.needsUpdate = true;
+          colors.needsUpdate = true;
+          size.needsUpdate = true;
+        }
       }
 
       visibleHeightAtZDepth(depth, camera) {
@@ -308,15 +332,17 @@ export default function BlackHoleText() {
       }
 
       distance(x1, y1, x2, y2) {
-        return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
       }
     }
 
-    if (document.readyState === "complete" || 
-        (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+    if (
+      document.readyState === 'complete' ||
+      (document.readyState !== 'loading' && !document.documentElement.doScroll)
+    ) {
       preload();
     } else {
-      document.addEventListener("DOMContentLoaded", preload);
+      document.addEventListener('DOMContentLoaded', preload);
     }
 
     return () => {
@@ -330,11 +356,12 @@ export default function BlackHoleText() {
   return (
     <div
       ref={containerRef}
-      id="magic"
-      className="absolute inset-0 w-full h-full"
+      className="w-full h-screen"
       style={{ 
-        zIndex: 0,
-        transform: 'translateY(8vh) translateX(6vw) scale(1.1)'
+        position: 'absolute',
+        left: '0',
+        top: '0',
+        overflow: 'hidden'
       }}
     />
   );

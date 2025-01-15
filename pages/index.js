@@ -1,5 +1,5 @@
 // pages/index.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import NavBar from '../components/NavBar';
 import HeroSection from '../components/HeroSection';
@@ -7,45 +7,69 @@ import ProjectReveal from '../components/ProjectReveal';
 import Footer from '../components/Footer';
 
 export default function Home() {
-  // We'll track the nav color in this state
   const [navColor, setNavColor] = useState('#000');
-  const [showFooter, setShowFooter] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const heroRef = useRef(null);
 
-  // Projects data
   const projects = [
     {
-      id: 'project1',
-      title: 'Design',
-      description: 'A fresh perspective for modern brands.',
-      imageSrc: '/api/placeholder/500/600',
-      navColor: '#ff0055', // hot pink for example
+      id: 'travel-explorers',
+      title: 'TravelExplorer',
+      description: 'A comprehensive travel and country information platform',
+      imageSrc: '/api/placeholder/1200/800',
+      details: 'Explore detailed information about countries worldwide...',
+      navColor: '#ff0055',
     },
     {
       id: 'project2',
-      title: 'Photography',
-      description: 'Capturing each moment with clarity and style.',
-      imageSrc: '/api/placeholder/500/600',
-      navColor: '#0055ff', // bright blue
+      title: 'Project 2',
+      description: 'Revolutionizing user experiences through motion and interaction.',
+      imageSrc: '/api/placeholder/1200/800',
+      navColor: '#6366f1',
     },
     {
-      id: 'about',
-      title: 'About Me',
-      description: 'Learn more about my journey and approach.',
-      imageSrc: '/api/placeholder/500/600',
-      navColor: '#333333', // dark gray
+      id: 'project3',
+      title: 'Project 3',
+      description: 'Exploring the future of digital experiences and interactions.',
+      imageSrc: '/api/placeholder/1200/800',
+      navColor: '#ec4899',
     },
   ];
 
-  // Show footer only after scrolling past ProjectReveal
   useEffect(() => {
+    function handleLoad() {
+      setTimeout(() => setLoading(false), 800);
+    }
+
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+    }
+
+    // Handle hero visibility based on scroll
     const handleScroll = () => {
-      const projectHeight = (projects.length + 1) * window.innerHeight;
-      setShowFooter(window.scrollY >= projectHeight - window.innerHeight);
+      if (!heroRef.current) return;
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      setIsHeroVisible(scrollPosition < windowHeight);
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [projects.length]);
+    return () => {
+      window.removeEventListener('load', handleLoad);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-[#020617]">
+        <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -55,23 +79,31 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <main className="relative">
-        {/* NavBar stays fixed at the top */}
+      <main className="relative bg-[#020617]">
+        {/* Navigation */}
         <NavBar navColor={navColor} />
 
-        {/* ProjectReveal section */}
-        <ProjectReveal
-          hero={<HeroSection />} 
-          projects={projects}
-          onColorChange={(color) => setNavColor(color)}
-        />
-
-        {/* Footer appears after ProjectReveal */}
+        {/* Hero Section */}
         <div 
-          className={`transition-opacity duration-500 ${
-            showFooter ? 'opacity-100' : 'opacity-0'
-          }`}
+          ref={heroRef} 
+          className="relative"
+          style={{ 
+            visibility: isHeroVisible ? 'visible' : 'hidden',
+            zIndex: isHeroVisible ? 10 : -1 
+          }}
         >
+          <HeroSection />
+        </div>
+
+        {/* Content Sections */}
+        <div className="relative z-20">
+          {/* Projects Section */}
+          <ProjectReveal 
+            projects={projects} 
+            onColorChange={setNavColor}
+          />
+
+          {/* Footer */}
           <Footer />
         </div>
       </main>

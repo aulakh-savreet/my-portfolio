@@ -1,3 +1,4 @@
+// components/ShaderBackground.js
 import dynamic from 'next/dynamic';
 
 const BlackHoleText = dynamic(() => import('./BlackHoleText'), {
@@ -5,5 +6,9 @@ const BlackHoleText = dynamic(() => import('./BlackHoleText'), {
 });
 
 export default function ShaderBackground() {
-  return <BlackHoleText />;
+  return (
+    <div className="fixed inset-0 w-full h-full pointer-events-auto">
+      <BlackHoleText />
+    </div>
+  );
 }
