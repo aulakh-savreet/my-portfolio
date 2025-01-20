@@ -1,6 +1,97 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const gsap = window.gsap;
+    if (!gsap) return;
+
+    gsap.killTweensOf([
+      '.footer-title span', 
+      '.footer-logo', 
+      '.footer-services li', 
+      '.footer-links',
+      '.glow-text'
+    ]);
+
+    // Create glow animation timeline
+    const glowTimeline = gsap.timeline({
+      repeat: -1,
+      yoyo: true,
+      defaults: { duration: 2, ease: "power1.inOut" }
+    });
+
+    glowTimeline.to('.glow-text', {
+      filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.4))',
+      stagger: {
+        each: 0.1,
+        from: "random"
+      }
+    });
+
+    // Entrance animations
+    gsap.from(containerRef.current, {
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top bottom',
+        end: 'top center',
+        scrub: 1,
+        onEnter: () => {
+          gsap.to('.footer-title span', {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.1,
+            ease: 'power3.out',
+            filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.3))'
+          });
+
+          gsap.to('.footer-logo', {
+            scale: 1,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+          });
+
+          gsap.to('.footer-services li', {
+            x: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power3.out'
+          });
+
+          gsap.to('.footer-links', {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power3.out'
+          });
+        }
+      }
+    });
+
+    // Set initial states
+    gsap.set('.footer-title span', { y: 100, opacity: 0 });
+    gsap.set('.footer-logo', { scale: 0.8, opacity: 0 });
+    gsap.set('.footer-services li', { x: -20, opacity: 0 });
+    gsap.set('.footer-links', { y: 20, opacity: 0 });
+
+    return () => {
+      glowTimeline.kill();
+      gsap.killTweensOf([
+        '.footer-title span', 
+        '.footer-logo', 
+        '.footer-services li', 
+        '.footer-links',
+        '.glow-text'
+      ]);
+    };
+  }, []);
+
   const handleBackToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -13,97 +104,113 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-white pt-20 pb-8 px-8">
-      {/* Main heading */}
-      <div className="mb-20">
-        <h2 className="text-7xl font-black leading-[0.9] tracking-tighter max-w-3xl">
-          DESIGN WITH CLASS.
-          <br />
-          BUILT TO LAST.
-        </h2>
-      </div>
+    <footer 
+      ref={containerRef}
+      className="relative w-full bg-[#030712] text-white min-h-screen flex items-center" 
+      style={{ zIndex: 100 }}
+    >
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#080C15] via-[#030712] to-black opacity-80" />
+      
+      <div className="max-w-screen-2xl mx-auto relative px-12 w-full flex flex-col justify-between min-h-screen">
+        <div className="grid grid-cols-12 gap-8 h-full" style={{ paddingTop: '23vh' }}>
+          {/* Left Column - Logo and Title */}
+          <div className="col-span-12 lg:col-span-6">
+            {/* Logo */}
+            <div className="mb-16">
+              <div className="footer-logo w-24 h-24 border-2 border-white rounded-full flex items-center justify-center">
+                <span className="text-2xl font-medium glow-text">sav</span>
+              </div>
+            </div>
 
-      {/* Logo */}
-      <div className="mb-20">
-        <div className="w-32 h-32 border-4 border-black rounded-full flex items-center justify-center">
-          <span className="text-4xl font-bold">dao</span>
-        </div>
-      </div>
-
-      {/* Main footer content */}
-      <div className="flex justify-between">
-        {/* Left side */}
-        <div className="flex items-end">
-          <div className="text-sm opacity-50">
-            <a href="#" className="hover:opacity-75 transition-opacity">TERMS OF USE</a>
-            <span className="mx-2">•</span>
-            <a href="#" className="hover:opacity-75 transition-opacity">PRIVACY POLICY</a>
-          </div>
-        </div>
-
-        {/* Right side */}
-        <div className="flex flex-col gap-8 items-end">
-          {/* Services section */}
-          <div className="text-right">
-            <h3 className="text-sm mb-4 opacity-50">SERVICES</h3>
-            <ul className="space-y-2">
-              {services.map((service) => (
-                <li key={service} className="flex items-center justify-end gap-2">
-                  <span className="text-lg font-medium">{service}</span>
-                  <span className="opacity-50">•</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Social links */}
-          <div className="text-right">
-            <h3 className="text-sm mb-4 opacity-50">FOLLOW</h3>
-            <div className="flex gap-4 justify-end">
-              {/* Instagram Icon */}
-              <a href="#" className="hover:opacity-75 transition-opacity">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                </svg>
-              </a>
-              {/* LinkedIn Icon */}
-              <a href="#" className="hover:opacity-75 transition-opacity">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                  <rect x="2" y="9" width="4" height="12"/>
-                  <circle cx="4" cy="4" r="2"/>
-                </svg>
-              </a>
-              {/* Behance Icon */}
-              <a href="#" className="hover:opacity-75 transition-opacity">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.89 17.56c-.63.23-1.29.35-1.96.35-3.57 0-6.47-2.9-6.47-6.47 0-.67.1-1.33.31-1.96A6.462 6.462 0 0 0 5.53 16c0 3.57 2.9 6.47 6.47 6.47 2.65 0 4.93-1.59 5.93-3.87l.96-1.04zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-                </svg>
-              </a>
+            {/* Main heading */}
+            <div className="mb-16">
+              <h2 className="footer-title text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
+                {['DESIGN', 'WITH', 'CLASS.', 'BUILT', 'TO', 'LAST.'].map((word, index) => (
+                  <span 
+                    key={index} 
+                    className="inline-block mr-4 mb-2 glow-text"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}
+                  >
+                    {word}
+                  </span>
+                ))}
+              </h2>
             </div>
           </div>
 
-          {/* Location */}
-          <div className="text-sm opacity-50">
-         <span className="mx-2">•</span> BASED IN CALGARY
-          </div>
+          {/* Right Column - Services and Links */}
+          <div className="col-span-12 lg:col-span-6 lg:flex lg:flex-col lg:items-end">
+            {/* Services section */}
+            <div className="mb-16">
+              <h3 className="text-sm tracking-wider text-white/50 mb-6 glow-text">SERVICES</h3>
+              <ul className="footer-services space-y-4">
+                {services.map((service) => (
+                  <li key={service} className="flex items-center justify-end gap-2 text-lg">
+                    <span className="font-light glow-text">{service}</span>
+                    <span className="text-white/30">•</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Back to top & Let's talk */}
-          <div className="flex items-center gap-6">
-            <button 
-              onClick={handleBackToTop}
-              className="flex items-center gap-2 hover:opacity-75 transition-opacity"
-            >
-              Back to top
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 19V5M5 12l7-7 7 7"/>
-              </svg>
-            </button>
-            <button className="bg-black text-white px-6 py-3 rounded-full hover:opacity-90 transition-opacity">
-              Let's talk↗
-            </button>
+            {/* Social links */}
+            <div className="mb-12">
+              <h3 className="text-sm tracking-wider text-white/50 mb-6 glow-text">FOLLOW</h3>
+              <div className="footer-links flex gap-6 justify-end">
+                <a href="#" className="text-white/75 hover:text-white transition-colors glow-text">
+                  <Github size={20} />
+                </a>
+                <a href="#" className="text-white/75 hover:text-white transition-colors glow-text">
+                  <Linkedin size={20} />
+                </a>
+                <a href="#" className="text-white/75 hover:text-white transition-colors glow-text">
+                  <Mail size={20} />
+                </a>
+              </div>
+            </div>
+
+            {/* Location */}
+            <div className="footer-links text-sm text-white/50 mb-8 glow-text">
+              • BASED IN CALGARY
+            </div>
+
+            {/* Navigation Links & CTA */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-12 mt-auto pt-16">
+              <div className="footer-links flex gap-6 text-sm text-white/50">
+                <a href="#" className="hover:text-white/75 transition-colors glow-text">TERMS OF USE</a>
+                <span>•</span>
+                <a href="#" className="hover:text-white/75 transition-colors glow-text">PRIVACY POLICY</a>
+              </div>
+
+              <div className="footer-links flex items-center gap-8">
+                <button 
+                  onClick={handleBackToTop}
+                  className="flex items-center gap-2 text-white/75 hover:text-white transition-colors group glow-text"
+                >
+                  Back to top
+                  <svg 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    className="transform transition-transform group-hover:-translate-y-1"
+                  >
+                    <path d="M12 19V5M5 12l7-7 7 7"/>
+                  </svg>
+                </button>
+                <button className="bg-white text-black px-6 py-3 rounded-full hover:bg-white/90 transition-all hover:scale-105 flex items-center gap-2 glow-text">
+                  Let's talk
+                  <ArrowUpRight size={18} className="transform transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

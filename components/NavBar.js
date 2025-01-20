@@ -1,66 +1,108 @@
-// components/NavBar.js
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Github, Linkedin, Mail, User } from 'lucide-react';
 
 export default function NavBar() {
-  const handleClick = (type) => {
-    switch (type) {
-      case 'showreel':
-        window.location.href = '#showreel';
-        break;
-      case 'projects':
-        window.location.href = '#projects';
-        break;
-      case 'studio':
-        window.location.href = '#studio';
-        break;
-      case 'contact':
-        window.location.href = '#contact';
-        break;
-      default:
-        break;
-    }
-  };
+  const linksRef = useRef([]);
+  const nameRef = useRef(null);
+
+  useEffect(() => {
+    const gsap = window.gsap;
+    if (!gsap) return;
+
+    // Initial state
+    gsap.set(linksRef.current, { y: 50, opacity: 0 });
+    gsap.set(nameRef.current, { y: -50, opacity: 0 });
+
+    // Animate nav items
+    gsap.to(nameRef.current, {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.to(linksRef.current, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: "power3.out"
+    });
+
+    // Hover animations for nav items
+    linksRef.current.forEach(link => {
+      if (!link) return;
+      
+      const text = link.querySelector('.nav-text');
+      const icon = link.querySelector('.nav-icon');
+      
+      link.addEventListener('mouseenter', () => {
+        gsap.to(text, {
+          y: -20,
+          opacity: 0,
+          duration: 0.3,
+          ease: "power2.in"
+        });
+        gsap.to(icon, {
+          y: 0,
+          opacity: 1,
+          duration: 0.3,
+          delay: 0.1,
+          ease: "power2.out"
+        });
+      });
+
+      link.addEventListener('mouseleave', () => {
+        gsap.to(text, {
+          y: 0,
+          opacity: 1,
+          duration: 0.3,
+          delay: 0.1,
+          ease: "power2.out"
+        });
+        gsap.to(icon, {
+          y: 20,
+          opacity: 0,
+          duration: 0.3,
+          ease: "power2.in"
+        });
+      });
+    });
+  }, []);
+
+  const navItems = [
+    { text: 'GITHUB', link: 'https://github.com/yourusername' },
+    { text: 'LINKEDIN', link: 'https://linkedin.com/in/yourusername' },
+    { text: 'ABOUT', link: '#about' },
+    { text: 'CONTACT', link: '#contact' }
+  ];
 
   return (
-    <nav
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        zIndex: 9999,
-        backgroundColor: 'transparent',
-      }}
-      className="flex justify-between items-center px-12 py-8"
-    >
-      {/* Logo */}
-      <div className="cursor-pointer">
-        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path 
-            d="M21 0C9.40202 0 0 9.40202 0 21C0 32.598 9.40202 42 21 42C32.598 42 42 32.598 42 21C42 9.40202 32.598 0 21 0ZM21 4.2C30.2817 4.2 37.8 11.7183 37.8 21C37.8 30.2817 30.2817 37.8 21 37.8C11.7183 37.8 4.2 30.2817 4.2 21C4.2 11.7183 11.7183 4.2 21 4.2Z" 
-            fill="white"
-          />
-        </svg>
-      </div>
+    <nav className="fixed top-0 left-0 w-full z-50 px-12 py-8">
+      <div className="flex justify-between items-center">
+        {/* Logo/Name */}
+        <div 
+          ref={nameRef}
+          className="relative overflow-hidden cursor-pointer group"
+        >
+          <span className="text-2xl font-bold bg-gradient-to-r from-white to-white/70 text-transparent bg-clip-text group-hover:to-indigo-400 transition-all duration-300">
+            SAV
+          </span>
+        </div>
 
-      {/* Navigation Items */}
-      <div className="flex gap-16">
-        {[
-          { name: 'SHOWREEL', type: 'showreel' },
-          { name: 'PROJECTS', type: 'projects' },
-          { name: 'THE STUDIO', type: 'studio' },
-          { name: 'CONTACT', type: 'contact' }
-        ].map((item) => (
-          <button
-            key={item.type}
-            onClick={() => handleClick(item.type)}
-            className="text-white text-sm tracking-[0.15em] font-light hover:opacity-60 transition-opacity relative group"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            {item.name}
-            <span className="absolute left-0 right-0 bottom-0 h-[1px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
-          </button>
-        ))}
+        {/* Navigation Items */}
+        <div className="flex gap-12">
+          {navItems.map((item, index) => (
+            <a
+              key={index}
+              ref={el => linksRef.current[index] = el}
+              href={item.link}
+              className="text-sm tracking-wider text-white/80 hover:text-white transition-colors"
+            >
+              {item.text}
+            </a>
+          ))}
+        </div>
       </div>
     </nav>
   );

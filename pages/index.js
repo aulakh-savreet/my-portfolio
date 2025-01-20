@@ -7,35 +7,9 @@ import ProjectReveal from '../components/ProjectReveal';
 import Footer from '../components/Footer';
 
 export default function Home() {
-  const [navColor, setNavColor] = useState('#000');
   const [loading, setLoading] = useState(true);
-  const [isHeroVisible, setIsHeroVisible] = useState(true);
-  const heroRef = useRef(null);
-
-  const projects = [
-    {
-      id: 'travel-explorers',
-      title: 'TravelExplorer',
-      description: 'A comprehensive travel and country information platform',
-      imageSrc: '/api/placeholder/1200/800',
-      details: 'Explore detailed information about countries worldwide...',
-      navColor: '#ff0055',
-    },
-    {
-      id: 'project2',
-      title: 'Project 2',
-      description: 'Revolutionizing user experiences through motion and interaction.',
-      imageSrc: '/api/placeholder/1200/800',
-      navColor: '#6366f1',
-    },
-    {
-      id: 'project3',
-      title: 'Project 3',
-      description: 'Exploring the future of digital experiences and interactions.',
-      imageSrc: '/api/placeholder/1200/800',
-      navColor: '#ec4899',
-    },
-  ];
+  const mainRef = useRef(null);
+  const [navColor, setNavColor] = useState('#000');
 
   useEffect(() => {
     function handleLoad() {
@@ -48,19 +22,42 @@ export default function Home() {
       window.addEventListener('load', handleLoad);
     }
 
-    // Handle hero visibility based on scroll
-    const handleScroll = () => {
-      if (!heroRef.current) return;
-      const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-      setIsHeroVisible(scrollPosition < windowHeight);
-    };
+    // Initialize GSAP ScrollTrigger
+    const gsap = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+    
+    if (gsap && ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('load', handleLoad);
-      window.removeEventListener('scroll', handleScroll);
-    };
+      // Kill any existing ScrollTriggers
+      ScrollTrigger.getAll().forEach(t => t.kill());
+
+      // Main scroll animation
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: mainRef.current,
+          start: 'top top',
+          end: '+=300%',
+          scrub: 1,
+          pin: true,
+          onUpdate: (self) => {
+            // Change navigation color based on scroll progress
+            const progress = self.progress;
+            if (progress > 0.5) {
+              setNavColor('#1e1b4b'); // Change to projects section color
+            } else {
+              setNavColor('#000'); // Hero section color
+            }
+          }
+        }
+      });
+
+      // Clean up on component unmount
+      return () => {
+        window.removeEventListener('load', handleLoad);
+        ScrollTrigger.getAll().forEach(t => t.kill());
+      };
+    }
   }, []);
 
   if (loading) {
@@ -72,41 +69,36 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="relative bg-black min-h-screen overflow-hidden">
       <Head>
         <title>Portfolio</title>
-        <meta name="description" content="Design portfolio showcasing creative work" />
+        <meta name="description" content="Creative portfolio showcasing digital experiences" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <main className="relative bg-[#020617]">
-        {/* Navigation */}
-        <NavBar navColor={navColor} />
+      {/* Fixed Navigation */}
+      <NavBar navColor={navColor} />
 
-        {/* Hero Section */}
+      {/* Main Content */}
+      <main 
+        ref={mainRef} 
+        className="relative bg-[#020617]"
+        style={{ height: '100vh' }}
+      >
+        {/* Hero Section - Initial view */}
         <div 
-          ref={heroRef} 
-          className="relative"
-          style={{ 
-            visibility: isHeroVisible ? 'visible' : 'hidden',
-            zIndex: isHeroVisible ? 10 : -1 
-          }}
+          className="relative w-full h-screen"
+          style={{ zIndex: 20 }}
         >
           <HeroSection />
         </div>
 
-        {/* Content Sections */}
-        <div className="relative z-20">
-          {/* Projects Section */}
-          <ProjectReveal 
-            projects={projects} 
-            onColorChange={setNavColor}
-          />
-
-          {/* Footer */}
-          <Footer />
-        </div>
+        {/* Projects Section - Slides up on scroll */}
+        <ProjectReveal />
       </main>
-    </>
+
+      {/* Footer Section */}
+      <Footer />
+    </div>
   );
 }

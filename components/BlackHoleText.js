@@ -14,8 +14,8 @@ export default function BlackHoleText() {
       const loadFont = () => {
         return new Promise((resolve) => {
           const loader = new FontLoader(manager);
-          // Using Helvetiker Bold font for better clarity
-          loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', (font) => {
+          // Changed to droid font for a surprising change!
+          loader.load('https://threejs.org/examples/fonts/droid/droid_serif_regular.typeface.json', (font) => {
             setTimeout(() => resolve(font), 500);
           });
         });
@@ -119,10 +119,10 @@ export default function BlackHoleText() {
         this.buttom = false;
 
         this.data = {
-          text: 'SAVREET',  // Changed text to SAVREET
+          text: 'INTENT',
           amount: 3000,
           particleSize: 2,
-          particleColor: 0xffffff,  // Changed color to white
+          particleColor: 0xffffff,
           textSize: 24,
           area: 250,
           ease: 0.1,
@@ -169,7 +169,7 @@ export default function BlackHoleText() {
           const points = shape.getSpacedPoints(this.data.amount);
           points.forEach(element => {
             thePoints.push(new THREE.Vector3(element.x, element.y, 0));
-            colors.push(1, 1, 1);  // White color (R,G,B all set to 1)
+            colors.push(1, 1, 1);
             sizes.push(1);
           });
         });
@@ -223,7 +223,6 @@ export default function BlackHoleText() {
         this.geometryCopy.copy(this.particles.geometry);
       }
 
-      // Rest of the original functions remain unchanged
       bindEvents() {
         const handleInteraction = (e) => {
           if (window.scrollY > window.innerHeight) return;
@@ -287,7 +286,7 @@ export default function BlackHoleText() {
               const t = Math.atan2(dy, dx);
               px -= f * Math.cos(t);
               py -= f * Math.sin(t);
-              colors.setXYZ(i, 1, 1, 1);  // Keep white color
+              colors.setXYZ(i, 1, 1, 1);
             } else if (mouseDistance < this.data.area) {
               if (i % 5 === 0) {
                 const t = Math.atan2(dy, dx);
@@ -301,7 +300,7 @@ export default function BlackHoleText() {
                 size.array[i] = this.data.particleSize * 1.3;
               }
 
-              colors.setXYZ(i, 1, 1, 1);  // Keep white color
+              colors.setXYZ(i, 1, 1, 1);
               size.array[i] = this.data.particleSize / 1.8;
             }
 
