@@ -28,8 +28,8 @@ const PixelBackground = () => {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.5;
-        this.opacity = Math.random() * 0.2;
+        this.size = Math.random() * 3; // increased from 1.5
+        this.opacity = Math.random() * 0.8; // increased from 0.2
         this.speed = Math.random() * 0.1;
       }
 
@@ -85,8 +85,9 @@ const PixelBackground = () => {
       ref={canvasRef}
       className="absolute inset-0 z-[15]"
       style={{ 
-        opacity: 0.3,
-        mixBlendMode: 'screen',
+        // remove or tweak these so particles are more visible
+        // opacity: 0.3,
+        // mixBlendMode: 'screen',
         pointerEvents: 'none'
       }}
     />
