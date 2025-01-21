@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import NavBar from '../components/NavBar';
 import HeroSection from '../components/HeroSection';
 import ProjectReveal from '../components/ProjectReveal';
@@ -84,6 +85,7 @@ export default function Home() {
       </Head>
 
       <NavBar navColor={navColor} />
+      <SpeedInsights />
 
       <main ref={mainRef} className="relative bg-[#020617]" style={{ height: '100vh' }}>
         <div className="relative w-full h-screen" style={{ zIndex: 20 }}>
