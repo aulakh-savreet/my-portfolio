@@ -26,18 +26,14 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
     const ScrollTrigger = window.ScrollTrigger;
     gsap.registerPlugin(ScrollTrigger);
     
-    // Kill any existing ScrollTriggers
     ScrollTrigger.getAll().forEach(st => st.kill());
-    
-    // Reset scroll position
+
     if (contentRef.current) {
       contentRef.current.scrollTop = 0;
     }
 
-    // Prevent background scrolling when detail is open
     document.body.style.overflow = 'hidden';
 
-    // Initial states
     gsap.set([containerRef.current, bgRef.current], { 
       visibility: 'visible',
       opacity: 0,
@@ -54,14 +50,12 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
       opacity: 0
     });
 
-    // Create main animation timeline
     const tl = gsap.timeline({
       onComplete: () => {
         gsap.set(containerRef.current, { pointerEvents: 'auto' });
       }
     });
 
-    // Animate in sequence
     tl.to([containerRef.current, bgRef.current], {
       opacity: 1,
       duration: 0.5,
@@ -81,7 +75,6 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
       ease: 'power2.out'
     }, '-=0.3');
 
-    // Setup scroll-triggered background gradient
     ScrollTrigger.create({
       trigger: contentRef.current,
       start: 'top top',
@@ -96,21 +89,23 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
       }
     });
 
-    // Cleanup
     return () => {
       ScrollTrigger.getAll().forEach(st => st.kill());
       gsap.killTweensOf([containerRef.current, contentRef.current, bgRef.current, '.nav-item']);
-      document.body.style.overflow = ''; // Reset overflow
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
   const handleClose = () => {
     const gsap = window.gsap;
-    
+    window.history.replaceState(null, '', window.location.pathname);
+    window.scrollTo(0, 0);
     gsap.set(containerRef.current, { pointerEvents: 'none' });
-    
     const tl = gsap.timeline({
-      onComplete: onClose
+      onComplete: () => {
+        document.body.style.overflow = '';
+        onClose();
+      },
     });
 
     tl.to('.nav-item', {
@@ -133,33 +128,32 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
     }, '-=0.3');
   };
 
-  if (!project) return null;
+  if (!project) {
+    return null;
+  }
 
   return (
     <>
-      {/* Background gradient layer */}
       <div
         ref={bgRef}
-        className="fixed inset-0 w-full h-full"
-        style={{ 
-          visibility: 'hidden',
-          background: '#0A192F',
-          zIndex: 9998, 
-          pointerEvents: 'auto'
+        style={{
+          visibility: isOpen ? 'visible' : 'hidden',
+          pointerEvents: isOpen ? 'auto' : 'none',
+          zIndex: 9998,
+          background: '#0A192F'
         }}
+        className="fixed inset-0 w-full h-full"
       />
       
-      {/* Main container */}
       <div
         ref={containerRef}
-        className="fixed inset-0 w-full h-full"
-        style={{ 
-          visibility: 'hidden',
-          zIndex: 9999,
-          pointerEvents: 'auto'
+        style={{
+          visibility: isOpen ? 'visible' : 'hidden',
+          pointerEvents: isOpen ? 'auto' : 'none',
+          zIndex: 9999
         }}
+        className="fixed inset-0 w-full h-full"
       >
-        {/* Back button */}
         <button
           onClick={handleClose}
           className="fixed top-8 left-8 z-50 flex items-center gap-2 px-4 py-2 bg-[#1A2942]/80 rounded-lg text-[#4A5568] hover:text-white transition-colors duration-300"
@@ -170,12 +164,9 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
           <span className="text-sm font-light">Back</span>
         </button>
 
-        {/* Main content */}
         <div ref={contentRef} className="w-full h-full overflow-y-auto">
           <div className="max-w-[1400px] mx-auto px-16 py-24">
-            {/* Content grid */}
             <div className="flex gap-24">
-              {/* Navigation sidebar */}
               <div className="w-48 flex-shrink-0">
                 <div className="fixed">
                   <h3 className="tracking-widest text-xs uppercase font-light text-[#4A5568] mb-8">
@@ -195,9 +186,7 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
                 </div>
               </div>
 
-              {/* Main content area */}
               <div className="flex-1">
-                {/* Title section */}
                 <div className="mb-16">
                   <h1 
                     ref={titleRef}
@@ -216,7 +205,6 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
                   </div>
                 </div>
 
-                {/* Project preview */}
                 <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-16 bg-[#1A2942]">
                   <img
                     src={project.imageSrc}
@@ -225,38 +213,8 @@ export default function ProjectDetail({ project, onClose, isOpen }) {
                   />
                 </div>
 
-                {/* Project content */}
                 <div className="prose prose-lg prose-invert max-w-none">
-                  <h2 id="overview">Overview</h2>
-                  <p>{project.description}</p>
-                  <p>{project.details}</p>
-
-                  <h2 id="highlights">Highlights</h2>
-                  <p>Example highlights content …</p>
-
-                  <h2 id="context">Context</h2>
-                  <p>Example context content …</p>
-
-                  <h2 id="the-problem">The Problem</h2>
-                  <p>Example problem content …</p>
-
-                  <h2 id="update-flow">Update Flow</h2>
-                  <p>Example update flow content …</p>
-
-                  <h2 id="layout">Layout</h2>
-                  <p>Example layout content …</p>
-
-                  <h2 id="interactions">Interactions</h2>
-                  <p>Example interactions content …</p>
-
-                  <h2 id="visual-design">Visual Design</h2>
-                  <p>Example visual design content …</p>
-
-                  <h2 id="final-designs">Final Designs</h2>
-                  <p>Example final designs content …</p>
-
-                  <h2 id="retrospective">Retrospective</h2>
-                  <p>Example retrospective content …</p>
+                  {/* ... rest of your content ... */}
                 </div>
               </div>
             </div>

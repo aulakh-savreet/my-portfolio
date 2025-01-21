@@ -1,6 +1,6 @@
-// pages/index.js
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import NavBar from '../components/NavBar';
 import HeroSection from '../components/HeroSection';
 import ProjectReveal from '../components/ProjectReveal';
@@ -10,29 +10,21 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const mainRef = useRef(null);
   const [navColor, setNavColor] = useState('#000');
+  const router = useRouter();
 
   useEffect(() => {
-    function handleLoad() {
-      setTimeout(() => setLoading(false), 800);
-    }
+    const handleLoad = () => setTimeout(() => setLoading(false), 800);
+    
+    if (document.readyState === 'complete') handleLoad();
+    else window.addEventListener('load', handleLoad);
 
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-    }
-
-    // Initialize GSAP ScrollTrigger
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
-    
+
     if (gsap && ScrollTrigger) {
       gsap.registerPlugin(ScrollTrigger);
-
-      // Kill any existing ScrollTriggers
       ScrollTrigger.getAll().forEach(t => t.kill());
 
-      // Main scroll animation
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: mainRef.current,
@@ -41,24 +33,39 @@ export default function Home() {
           scrub: 1,
           pin: true,
           onUpdate: (self) => {
-            // Change navigation color based on scroll progress
             const progress = self.progress;
-            if (progress > 0.5) {
-              setNavColor('#1e1b4b'); // Change to projects section color
-            } else {
-              setNavColor('#000'); // Hero section color
-            }
+            setNavColor(progress > 0.5 ? '#1e1b4b' : '#000');
           }
         }
       });
 
-      // Clean up on component unmount
       return () => {
         window.removeEventListener('load', handleLoad);
         ScrollTrigger.getAll().forEach(t => t.kill());
       };
     }
   }, []);
+
+  // Enhanced scroll restoration
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (url === '/') {
+        const savedScroll = sessionStorage.getItem('projectScroll');
+        if (savedScroll) {
+          requestAnimationFrame(() => {
+            window.scrollTo(0, parseInt(savedScroll));
+            sessionStorage.removeItem('projectScroll');
+          });
+        }
+      }
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router]);
 
   if (loading) {
     return (
@@ -76,28 +83,15 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      {/* Fixed Navigation */}
       <NavBar navColor={navColor} />
 
-      {/* Main Content */}
-      <main 
-        ref={mainRef} 
-        className="relative bg-[#020617]"
-        style={{ height: '100vh' }}
-      >
-        {/* Hero Section - Initial view */}
-        <div 
-          className="relative w-full h-screen"
-          style={{ zIndex: 20 }}
-        >
+      <main ref={mainRef} className="relative bg-[#020617]" style={{ height: '100vh' }}>
+        <div className="relative w-full h-screen" style={{ zIndex: 20 }}>
           <HeroSection />
         </div>
-
-        {/* Projects Section - Slides up on scroll */}
         <ProjectReveal />
       </main>
 
-      {/* Footer Section */}
       <Footer />
     </div>
   );

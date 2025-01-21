@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PixelBackground from './PixelBackground';
 import dynamic from 'next/dynamic';
 
@@ -7,6 +7,90 @@ const ShaderBackground = dynamic(() => import('./ShaderBackground'), {
 });
 
 export default function HeroSection() {
+  const mainTextRef = useRef(null);
+  const subtitle1Ref = useRef(null);
+  const subtitle2Ref = useRef(null);
+
+  useEffect(() => {
+    const gsap = window.gsap;
+    if (!gsap) return;
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+    
+    // Function to create scramble effect
+    const scrambleText = (element, finalText, duration = 30) => {
+      if (!element) return;
+      
+      let iteration = 0;
+      const originalText = finalText;
+      clearInterval(element.scrambleInterval);
+      
+      element.scrambleInterval = setInterval(() => {
+        element.innerText = originalText
+          .split("")
+          .map((letter, index) => {
+            if (index < iteration) {
+              return originalText[index];
+            }
+            return chars[Math.floor(Math.random() * chars.length)];
+          })
+          .join("");
+        
+        if (iteration >= originalText.length) {
+          clearInterval(element.scrambleInterval);
+          element.innerText = originalText;
+        }
+        
+        iteration += 1/2;
+      }, duration);
+    };
+
+    // Initial load animation
+    const texts = [
+      {
+        ref: mainTextRef.current,
+        text: "Crafting digital experiences through code and creativity"
+      },
+      {
+        ref: subtitle1Ref.current,
+        text: "FULL-STACK DEVELOPER"
+      },
+      {
+        ref: subtitle2Ref.current,
+        text: "UI/UX DESIGNER"
+      }
+    ];
+
+    // Stagger the initial animations
+    texts.forEach((item, index) => {
+      setTimeout(() => {
+        // Use faster duration for main text
+        const duration = index === 0 ? 15 : 30;
+        scrambleText(item.ref, item.text, duration);
+      }, index * 300); // Reduced delay between animations
+    });
+
+    // Add hover effect for main text
+    if (mainTextRef.current) {
+      mainTextRef.current.addEventListener('mouseenter', () => {
+        scrambleText(mainTextRef.current, "Crafting digital experiences through code and creativity", 15);
+      });
+    }
+
+    // Cleanup
+    return () => {
+      // Clean up intervals
+      texts.forEach(item => {
+        if (item.ref && item.ref.scrambleInterval) {
+          clearInterval(item.ref.scrambleInterval);
+        }
+      });
+      
+      // Kill GSAP animations
+      gsap.killTweensOf([mainTextRef.current, subtitle1Ref.current, subtitle2Ref.current]);
+    };
+  }, []);
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background with purple gradient */}
@@ -32,7 +116,8 @@ export default function HeroSection() {
       <div className="hero-element absolute inset-0 z-10 flex flex-col items-center">
         <div className="mt-[60vh] text-center">
           <p 
-            className="text-xl text-white/80 mb-8"
+            ref={mainTextRef}
+            className="text-xl text-white/80 mb-8 cursor-pointer"
             style={{ 
               fontFamily: 'Space Grotesk',
               letterSpacing: '0.1em',
@@ -52,12 +137,12 @@ export default function HeroSection() {
           >
             <div className="flex items-center gap-3">
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
-              <span>FRONTEND DEVELOPER</span>
+              <span ref={subtitle1Ref}>FULL-STACK DEVELOPER</span>
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
             </div>
             <div className="flex items-center gap-3">
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
-              <span>UI/UX DESIGNER</span>
+              <span ref={subtitle2Ref}>UI/UX DESIGNER</span>
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
             </div>
           </div>

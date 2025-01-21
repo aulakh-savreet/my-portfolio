@@ -11,22 +11,22 @@ export default function ProjectReveal() {
 
   const projects = [
     {
-      id: 'project1',
+      id: 'travel-explorer',
       name: 'Travel Explorer',
       description: 'Dpt.',
       technologies: ['Vue.js', 'NuxtJS', 'PixiJS', 'Akufen'],
       image: '/api/placeholder/600/400'
     },
     {
-      id: 'project2',
+      id: 'task-buddy',
       name: 'Task Buddy',
       description: 'Interactive historical experience',
       technologies: ['React', 'Three.js', 'GSAP'],
       image: '/api/placeholder/600/400'
     },
     {
-      id: 'Village Rentals',
-      name: 'Vie Noire',
+      id: 'village-rentals',
+      name: 'VIllage Rentals',
       description: 'Digital art platform',
       technologies: ['Next.js', 'WebGL', 'Framer Motion'],
       image: '/api/placeholder/600/400'
@@ -38,13 +38,9 @@ export default function ProjectReveal() {
     const ScrollTrigger = window.ScrollTrigger;
     if (!gsap || !ScrollTrigger || !containerRef.current) return;
 
-    // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
-
-    // Kill any existing ScrollTriggers before creating new ones
     ScrollTrigger.getAll().forEach(st => st.kill());
 
-    // Set initial state
     gsap.set(containerRef.current, { 
       backgroundColor: '#000000',
       y: '100vh'
@@ -55,7 +51,6 @@ export default function ProjectReveal() {
       y: 50
     });
 
-    // Create scroll timeline
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: 'main',
@@ -76,13 +71,11 @@ export default function ProjectReveal() {
       }
     });
 
-    // Animate projects section in
     tl.to(containerRef.current, {
       y: 0,
       duration: 1,
       ease: 'power2.inOut'
-    })
-    .to('.project-item', {
+    }).to('.project-item', {
       opacity: 1,
       y: 0,
       stagger: 0.1,
@@ -90,7 +83,6 @@ export default function ProjectReveal() {
       ease: 'power2.out'
     }, '-=0.5');
 
-    // Handle mouse movement for background color
     const handleMouseMove = (e) => {
       if (!containerRef.current) return;
       
@@ -109,25 +101,16 @@ export default function ProjectReveal() {
     const currentContainer = containerRef.current;
     currentContainer.addEventListener('mousemove', handleMouseMove);
 
-    // Cleanup function
     return () => {
-      // Remove event listener
       currentContainer.removeEventListener('mousemove', handleMouseMove);
-      
-      // Kill all ScrollTriggers
       ScrollTrigger.getAll().forEach(st => st.kill());
-      
-      // Kill all GSAP animations
       gsap.killTweensOf(['.project-item', '.hero-element', currentContainer]);
-      
-      // Reset styles
       gsap.set(['.project-item', '.hero-element', currentContainer], { clearProps: 'all' });
     };
   }, []);
 
   return (
     <>
-      {/* Custom Cursor */}
       <div 
         className="fixed pointer-events-none z-50 transition-transform duration-100"
         style={{ 
@@ -145,18 +128,15 @@ export default function ProjectReveal() {
         </div>
       </div>
 
-      {/* Main Container */}
       <div 
         ref={containerRef} 
         className="fixed top-0 left-0 w-full h-screen bg-black cursor-none"
         style={{ zIndex: 30 }}
       >
         <div className="relative h-screen">
-          {/* Scrollable Projects Container */}
           <div className="absolute inset-0 overflow-y-auto">
             <div className="py-20 px-12 mb-32">
               <h2 className="text-2xl mb-16 uppercase tracking-wider">Projets</h2>
-              
               <div className="flex">
                 <div className="w-full max-w-5xl">
                   {projects.map((project) => (
@@ -165,7 +145,10 @@ export default function ProjectReveal() {
                       className="project-item relative mb-24 group cursor-none"
                       onMouseEnter={() => setActiveProject(project)}
                       onMouseLeave={() => setActiveProject(null)}
-                      onClick={() => router.push(`/projects/${project.id}`)}
+                      onClick={() => {
+                        sessionStorage.setItem('projectScroll', window.scrollY);
+                        router.push(`/projects/${project.id}`);
+                      }}
                     >
                       <div className="relative flex items-center">
                         <div className="flex-shrink-0">
@@ -174,11 +157,8 @@ export default function ProjectReveal() {
                           </h3>
                           <p className="text-xl text-white/60">{project.description}</p>
                         </div>
-
                         {isLeftHalf && (
-                          <div 
-                            className="flex gap-3 ml-8 opacity-0 transform translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
-                          >
+                          <div className="flex gap-3 ml-8 opacity-0 transform translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
                             {project.technologies.map((tech, index) => (
                               <span
                                 key={index}
@@ -197,7 +177,6 @@ export default function ProjectReveal() {
             </div>
           </div>
 
-          {/* Fixed Preview Window */}
           <div 
             className="preview-window fixed bottom-8 right-8 w-96 h-64 rounded-3xl overflow-hidden shadow-2xl"
             style={{
@@ -218,6 +197,13 @@ export default function ProjectReveal() {
           </div>
         </div>
       </div>
+
+      <button
+        onClick={() => router.push('/#projects')}
+        className="flex items-center gap-2 px-4 py-2 bg-[#1A2942]/20 rounded-lg text-gray-400 hover:text-white transition-colors duration-300"
+      >
+        <span className="text-sm font-light">Back</span>
+      </button>
     </>
   );
 }

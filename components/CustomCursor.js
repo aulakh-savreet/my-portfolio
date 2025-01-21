@@ -20,7 +20,8 @@ const CustomCursor = ({ isLeftHalf }) => {
         left: position.x,
         top: position.y,
         transform: `translate(-50%, -50%) scale(${isLeftHalf ? 1 : 0})`,
-        willChange: 'transform'
+        willChange: 'transform',
+        pointerEvents: 'none !important'
       }}
     >
       <div 

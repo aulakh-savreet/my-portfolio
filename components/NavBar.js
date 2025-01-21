@@ -4,7 +4,7 @@ import { Github, Linkedin, Mail, User } from 'lucide-react';
 export default function NavBar() {
   const linksRef = useRef([]);
   const nameRef = useRef(null);
-
+  
   useEffect(() => {
     const gsap = window.gsap;
     if (!gsap) return;
@@ -28,46 +28,61 @@ export default function NavBar() {
       stagger: 0.1,
       ease: "power3.out"
     });
+    
+    // SAV text glow animation
+    const glowTimeline = gsap.timeline({
+      repeat: -1,
+      yoyo: true
+    });
+    
+    glowTimeline.to(nameRef.current, {
+      filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.5))',
+      duration: 2,
+      ease: "power2.inOut"
+    });
 
-    // Hover animations for nav items
+    // Text scramble effect
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+    
     linksRef.current.forEach(link => {
       if (!link) return;
-      
-      const text = link.querySelector('.nav-text');
-      const icon = link.querySelector('.nav-icon');
+      const originalText = link.textContent;
+      let currentText = originalText;
+      let interval;
       
       link.addEventListener('mouseenter', () => {
-        gsap.to(text, {
-          y: -20,
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.in"
-        });
-        gsap.to(icon, {
-          y: 0,
-          opacity: 1,
-          duration: 0.3,
-          delay: 0.1,
-          ease: "power2.out"
-        });
+        let iteration = 0;
+        clearInterval(interval);
+        
+        interval = setInterval(() => {
+          link.textContent = currentText
+            .split("")
+            .map((letter, index) => {
+              if(index < iteration) {
+                return originalText[index];
+              }
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join("");
+          
+          if(iteration >= originalText.length) {
+            clearInterval(interval);
+            link.textContent = originalText;
+          }
+          
+          iteration += 1/3;
+        }, 30);
       });
 
       link.addEventListener('mouseleave', () => {
-        gsap.to(text, {
-          y: 0,
-          opacity: 1,
-          duration: 0.3,
-          delay: 0.1,
-          ease: "power2.out"
-        });
-        gsap.to(icon, {
-          y: 20,
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.in"
-        });
+        clearInterval(interval);
+        link.textContent = originalText;
       });
     });
+
+    return () => {
+      glowTimeline.kill();
+    };
   }, []);
 
   const navItems = [
@@ -83,9 +98,9 @@ export default function NavBar() {
         {/* Logo/Name */}
         <div 
           ref={nameRef}
-          className="relative overflow-hidden cursor-pointer group"
+          className="relative overflow-hidden cursor-pointer"
         >
-          <span className="text-2xl font-bold bg-gradient-to-r from-white to-white/70 text-transparent bg-clip-text group-hover:to-indigo-400 transition-all duration-300">
+          <span className="text-3xl font-bold text-white">
             SAV
           </span>
         </div>

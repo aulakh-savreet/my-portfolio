@@ -15,7 +15,6 @@ const PixelBackground = () => {
       canvas.height = window.innerHeight;
     };
 
-    // Handle resize
     window.addEventListener('resize', setCanvasSize);
     setCanvasSize();
 
@@ -28,32 +27,48 @@ const PixelBackground = () => {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3; // increased from 1.5
-        this.opacity = Math.random() * 0.8; // increased from 0.2
-        this.speed = Math.random() * 0.1;
+        
+        // Increased size ranges
+        this.size = Math.random() < 0.9 
+          ? Math.random() * 1.5 + 0.5  // 90% are small but visible
+          : Math.random() * 2.5 + 1;   // 10% are notably larger
+        
+        // Increased opacity ranges
+        this.opacity = Math.random() < 0.85
+          ? Math.random() * 0.5 + 0.2  // 85% medium opacity
+          : Math.random() * 0.8 + 0.4; // 15% higher opacity
+        
+        this.speed = Math.random() * 0.08 + 0.02; // Slightly faster movement
+        
+        // More pronounced color variation
+        const hue = Math.random() < 0.92
+          ? 255  // 92% white
+          : 220 + Math.random() * 35; // 8% slight blue tint
+          
+        this.color = `rgba(${hue}, ${hue}, 255, ${this.opacity})`;
       }
 
       update() {
         this.y -= this.speed;
+        this.x += Math.sin(this.y * 0.01) * 0.1;
+        
         if (this.y < 0) {
           this.y = canvas.height;
+          this.reset();
         }
-        
-        // Subtle horizontal drift
-        this.x += Math.sin(this.y * 0.01) * 0.1;
         if (this.x < 0) this.x = canvas.width;
         if (this.x > canvas.width) this.x = 0;
       }
 
       draw() {
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.size, this.size);
       }
     }
 
-    // Create particles
+    // Create more particles
     const createParticles = () => {
-      const particleCount = Math.floor((canvas.width * canvas.height) / 10000);
+      const particleCount = Math.floor((canvas.width * canvas.height) / 12000); // Increased density
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
       }
@@ -61,7 +76,12 @@ const PixelBackground = () => {
 
     // Animation loop
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Create gradient for background
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, 'rgba(26, 11, 46, 0.2)');   // Dark purple
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.2)');      // Black
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       particles.forEach(particle => {
         particle.update();
@@ -85,9 +105,8 @@ const PixelBackground = () => {
       ref={canvasRef}
       className="absolute inset-0 z-[15]"
       style={{ 
-        // remove or tweak these so particles are more visible
-        // opacity: 0.3,
-        // mixBlendMode: 'screen',
+        opacity: 0.7, // Increased overall opacity
+        mixBlendMode: 'screen',
         pointerEvents: 'none'
       }}
     />
