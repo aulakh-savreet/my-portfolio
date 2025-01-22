@@ -7,6 +7,7 @@ export default function ProjectReveal() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLeftHalf, setIsLeftHalf] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
+  const [showCursor, setShowCursor] = useState(false);
   const router = useRouter();
 
   const projects = [
@@ -88,21 +89,49 @@ export default function ProjectReveal() {
       
       const rect = containerRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
+      const y = e.clientY;
       
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      setIsLeftHalf(x < rect.width / 2);
+      // Check if mouse is in the container bounds
+      const isInBounds = 
+        y >= rect.top && 
+        y <= rect.bottom && 
+        x >= 0 && 
+        x <= rect.width;
+
+      setShowCursor(isInBounds);
       
+      if (isInBounds) {
+        setMousePosition({ x: e.clientX, y });
+        setIsLeftHalf(x < rect.width / 2);
+        gsap.to(containerRef.current, {
+          backgroundColor: x < rect.width / 2 ? '#4C1D95' : '#000000',
+          duration: 0.3
+        });
+      } else {
+        setIsLeftHalf(false);
+        gsap.to(containerRef.current, {
+          backgroundColor: '#000000',
+          duration: 0.3
+        });
+      }
+    };
+
+    const handleMouseLeave = () => {
+      setShowCursor(false);
+      setIsLeftHalf(false);
       gsap.to(containerRef.current, {
-        backgroundColor: x < rect.width / 2 ? '#4C1D95' : '#000000',
+        backgroundColor: '#000000',
         duration: 0.3
       });
     };
 
     const currentContainer = containerRef.current;
     currentContainer.addEventListener('mousemove', handleMouseMove);
+    currentContainer.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
       currentContainer.removeEventListener('mousemove', handleMouseMove);
+      currentContainer.removeEventListener('mouseleave', handleMouseLeave);
       ScrollTrigger.getAll().forEach(st => st.kill());
       gsap.killTweensOf(['.project-item', '.hero-element', currentContainer]);
       gsap.set(['.project-item', '.hero-element', currentContainer], { clearProps: 'all' });
@@ -111,22 +140,24 @@ export default function ProjectReveal() {
 
   return (
     <>
-      <div 
-        className="fixed pointer-events-none z-50 transition-transform duration-100"
-        style={{ 
-          left: mousePosition.x,
-          top: mousePosition.y,
-          transform: `translate(-50%, -50%) scale(${isLeftHalf ? 1 : 0})`,
-          willChange: 'transform'
-        }}
-      >
+      {showCursor && (
         <div 
-          className="w-10 h-10 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: '#F5E6C4' }}
+          className="fixed pointer-events-none z-50 transition-transform duration-100"
+          style={{ 
+            left: mousePosition.x,
+            top: mousePosition.y,
+            transform: `translate(-50%, -50%) scale(${isLeftHalf ? 1 : 0})`,
+            willChange: 'transform'
+          }}
         >
-          <ArrowUpRight className="w-4 h-4 text-black" />
+          <div 
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: '#F5E6C4' }}
+          >
+            <ArrowUpRight className="w-4 h-4 text-black" />
+          </div>
         </div>
-      </div>
+      )}
 
       <div 
         ref={containerRef} 
@@ -197,13 +228,6 @@ export default function ProjectReveal() {
           </div>
         </div>
       </div>
-
-      <button
-        onClick={() => router.push('/#projects')}
-        className="flex items-center gap-2 px-4 py-2 bg-[#1A2942]/20 rounded-lg text-gray-400 hover:text-white transition-colors duration-300"
-      >
-        <span className="text-sm font-light">Back</span>
-      </button>
     </>
   );
 }

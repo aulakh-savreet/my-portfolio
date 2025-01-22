@@ -97,10 +97,12 @@ export default function Footer() {
   };
 
   const services = [
-    'BRANDING',
-    'PHOTOGRAPHY',
-    'ART DIRECTION',
-    'WEB DESIGN'
+    'FRONTEND DEVELOPMENT',
+    'REACT / NEXT.JS',
+    'UI DEVELOPMENT',
+    'WEB ANIMATION',
+    'RESPONSIVE DESIGN',
+    'PERFORMANCE OPTIMIZATION'
   ];
 
   return (
@@ -109,24 +111,21 @@ export default function Footer() {
       className="relative w-full bg-[#030712] text-white min-h-screen flex items-center" 
       style={{ zIndex: 100 }}
     >
-      {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#080C15] via-[#030712] to-black opacity-80" />
       
       <div className="max-w-screen-2xl mx-auto relative px-12 w-full flex flex-col justify-between min-h-screen">
-        <div className="grid grid-cols-12 gap-8 h-full" style={{ paddingTop: '23vh' }}>
+        <div className="grid grid-cols-12 gap-8 h-full" style={{ paddingTop: '15vh' }}>
           {/* Left Column - Logo and Title */}
           <div className="col-span-12 lg:col-span-6">
-            {/* Logo */}
             <div className="mb-16">
               <div className="footer-logo w-24 h-24 border-2 border-white rounded-full flex items-center justify-center">
                 <span className="text-2xl font-medium glow-text">sav</span>
               </div>
             </div>
 
-            {/* Main heading */}
             <div className="mb-16">
               <h2 className="footer-title text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
-                {['DESIGN', 'WITH', 'CLASS.', 'BUILT', 'TO', 'LAST.'].map((word, index) => (
+                {['DESIGN', 'WITH', 'CODE.', 'BUILT', 'TO', 'LAST.'].map((word, index) => (
                   <span 
                     key={index} 
                     className="inline-block mr-4 mb-2 glow-text"
@@ -145,12 +144,12 @@ export default function Footer() {
 
           {/* Right Column - Services and Links */}
           <div className="col-span-12 lg:col-span-6 lg:flex lg:flex-col lg:items-end">
-            {/* Services section */}
-            <div className="mb-16">
+            {/* Services section with updated styling */}
+            <div className="mb-16 w-full lg:w-auto">
               <h3 className="text-sm tracking-wider text-white/50 mb-6 glow-text">SERVICES</h3>
-              <ul className="footer-services space-y-4">
+              <ul className="footer-services space-y-4 text-right">
                 {services.map((service) => (
-                  <li key={service} className="flex items-center justify-end gap-2 text-lg">
+                  <li key={service} className="flex items-center justify-end gap-2 text-lg whitespace-nowrap">
                     <span className="font-light glow-text">{service}</span>
                     <span className="text-white/30">•</span>
                   </li>
@@ -158,7 +157,7 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Social links */}
+            {/* Rest of the footer content remains the same */}
             <div className="mb-12">
               <h3 className="text-sm tracking-wider text-white/50 mb-6 glow-text">FOLLOW</h3>
               <div className="footer-links flex gap-6 justify-end">
@@ -174,12 +173,10 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Location */}
             <div className="footer-links text-sm text-white/50 mb-8 glow-text">
               • BASED IN CALGARY
             </div>
 
-            {/* Navigation Links & CTA */}
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-12 mt-auto pt-16">
               <div className="footer-links flex gap-6 text-sm text-white/50">
                 <a href="#" className="hover:text-white/75 transition-colors glow-text">TERMS OF USE</a>
