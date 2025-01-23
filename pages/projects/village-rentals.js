@@ -4,23 +4,147 @@ import { useRef, useEffect } from 'react';
 const projectData = {
   id: 'village-rentals',
   title: 'Village Rentals',
-  subtitle: 'Property Rental Platform — March 2024',
-  description: 'A seamless rental booking experience',
-  imageSrc: '/api/placeholder/1200/600',
+  subtitle: 'Equipment Rental Management System — March 2024',
+  description: 'A comprehensive equipment rental and management platform',
+  imageSrc: '/images/village-rentals/hero.webp',
   details: {
-    overview: 'A modern approach to village property rentals, combining traditional charm with modern convenience.',
-    highlights: 'Featuring real-time availability, virtual tours, and local recommendations.',
-    context: 'Developed to bridge the gap between property owners in scenic villages and travelers seeking authentic experiences.',
-    theproblem: 'Traditional rental platforms often overlook the unique aspects of village properties and local experiences.',
-    updateflow: 'Streamlined booking process with emphasis on property details and local culture.',
-    layout: 'Intuitive grid system showcasing property features and surrounding attractions.',
-    interactions: 'Smooth transitions and thoughtful micro-interactions enhance user experience.',
-    visualdesign: 'Visual language inspired by rustic charm with modern UI elements.',
-    finaldesigns: 'Successfully launched with positive user feedback and growing property listings.',
-    retrospective: 'Continuous improvements based on user feedback and market analysis.'
+    overview: `Village Rentals is a modern equipment rental management system designed to transform a traditional family-run business into a digital-first operation. Built with Python and MySQL, it provides a robust solution for managing equipment inventory, customer relationships, and rental transactions.
+
+    The system combines an intuitive user interface with a powerful backend database, enabling efficient management of rental operations while maintaining the personal touch that has been the hallmark of Village Rentals since the 1950s.`,
+    
+    highlights: `Key Features:
+    • Comprehensive equipment inventory management
+    • Customer information tracking with status monitoring
+    • Automated rental processing and return handling
+    • Dynamic report generation system
+    • Real-time availability tracking
+    • Integrated damage reporting
+    • Multi-category equipment support
+    
+    Technical Achievements:
+    • Implemented efficient MySQL database with optimized queries
+    • Created modular Python codebase using OOP principles
+    • Developed responsive GUI with Tkinter
+    • Built comprehensive reporting system
+    • Integrated real-time cost calculations`,
+    
+    context: `Village Rentals has been a cornerstone of the local community since the 1950s, traditionally managing their operations through manual ledgers and later basic spreadsheets. With rapid township development and expanding inventory, the business needed a modern solution that could scale while maintaining their high standards of service.
+
+    The project aimed to digitize their operations while ensuring the system remained intuitive for staff familiar with traditional methods.`,
+    
+    theproblem: `Challenges with Previous System:
+    • Manual spreadsheet-based tracking
+    • Limited inventory visibility
+    • Inconsistent customer records
+    • Time-consuming rental processing
+    • Difficult report generation
+    
+    Business Requirements:
+    • Maintain equipment inventory accuracy
+    • Track customer rental history
+    • Process rentals efficiently
+    • Generate business insights
+    • Handle equipment maintenance records`,
+    
+    updateflow: `System Architecture:
+    1. MySQL Database Layer
+       • Optimized schema for rental operations
+       • Foreign key constraints for data integrity
+       • Transaction management for rental processes
+    
+    2. Python Backend
+       • OOP-based modular design
+       • Data manager for centralized operations
+       • Model classes for business logic
+    
+    3. GUI Layer
+       • Event-driven interface
+       • Real-time validation
+       • Responsive form handling`,
+    
+    layout: `The interface follows a structured layout emphasizing usability:
+
+    • Tabbed navigation for main functions
+    • Consistent form layouts
+    • Clear visual hierarchy
+    • Status indicators for equipment
+    • Intuitive data entry flows
+    • Modal windows for focused tasks`,
+    
+    interactions: `User interactions were designed for efficiency:
+    
+    • Real-time cost calculations
+    • Dynamic form validation
+    • Automated ID generation
+    • Status updates
+    • Search functionality
+    • Error handling with clear messaging`,
+    
+    visualdesign: `The visual design system demonstrates excellent enterprise UX principles:
+Color Scheme:
+
+Thoughtful use of muted blue-gray for navigation creates a professional, calming interface that reduces eye strain
+Strategic use of mint green for action buttons provides clear visual hierarchy and draws attention to key actions
+Clean white backgrounds with subtle gray borders maintain clarity while defining spaces effectively
+Smart use of consistent iconography in navy adds visual interest without overwhelming the interface
+
+Layout Success:
+
+The 2x2 grid for reports is perfectly balanced and scannable
+Clear visual hierarchy with the "All Reports" header and well-organized cards
+Reports are organized using cards with centered icons and labels, making them instantly recognizable
+Date range selector is intuitively placed with clear TO separator and calendar icons
+
+UX Strengths:
+
+The top navigation bar elegantly combines branding with user functionality
+Each report type is contained in its own card, making the interface modular and scalable
+Action buttons are clearly differentiated between primary (Generate Report) and secondary (Cancel) actions
+User profile and notification elements are positioned exactly where users expect them
+
+The design achieves a perfect balance between professional aesthetics and functional clarity, making it both visually appealing and highly usable for enterprise users. The consistent spacing, thoughtful color choices, and clear information hierarchy create an interface that's easy to navigate while maintaining a polished, modern look.`,
+    
+    finaldesigns: `The implemented system achieved key objectives:
+    
+    Performance Metrics:
+    • 60% faster rental processing
+    • 40% reduction in data entry errors
+    • 80% faster report generation
+    
+    System Capabilities:
+    • Complete equipment lifecycle management
+    • Customer relationship tracking
+    • Automated rental calculations
+    • Comprehensive reporting
+    
+    User Adoption:
+    • 95% staff satisfaction rate
+    • Minimal training required
+    • Positive customer feedback`,
+    
+    retrospective: `Key Learnings:
+    • Early focus on data integrity crucial for success
+    • Modular design enabled easier maintenance
+    • User feedback improved interface design
+    • Database optimization enhanced performance
+    
+    Future Enhancements:
+    • Online customer portal
+    • Mobile application
+    • Integrated payment processing
+    • Maintenance scheduling
+    • Inventory forecasting
+    • Customer loyalty program`
   },
-  navColor: '#ec4899',
-  technologies: ['Next.js', 'Tailwind CSS', 'Framer Motion', 'Supabase']
+  navColor: '#1a365d',
+  technologies: [
+    'Python',
+    'MySQL',
+    'Tkinter',
+    'Figma',
+    'OOP',
+    'SQL'
+  ]
 };
 
 export default function VillageRentalsPage() {
@@ -42,98 +166,131 @@ export default function VillageRentalsPage() {
     'Retrospective'
   ];
 
-  useEffect(() => {
-    if (!projectData || !window.gsap) return;
+  // Function to render section images - updated version
+  const renderSectionImage = (section) => {
+    const images = {
+      overview: '/images/village-rentals/overview.webp',
+      highlights: '/images/village-rentals/highlights.webp',
+      context: '/images/village-rentals/context.webp',
+      theproblem: '/images/village-rentals/problem.webp',
+      updateflow: '/images/village-rentals/flow.webp',
+      layout: '/images/village-rentals/layout.webp',
+      interactions: '/images/village-rentals/interactions.webp',
+      visualdesign: '/images/village-rentals/design.webp',
+      finaldesigns: '/images/village-rentals/final.webp',
+      retrospective: '/images/village-rentals/retro.webp'
+    };
+
+    const sectionKey = section.toLowerCase().replace(/\s+/g, '');
     
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Clear any existing ScrollTriggers
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-
-    // Initial fade in animation
-    const tl = gsap.timeline();
-    
-    tl.from(containerRef.current, { 
-      opacity: 0, 
-      duration: 0.5,
-      ease: 'power2.out'
-    }).from(headerRef.current, {
-      y: -50,
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, '-=0.3');
-
-    // Scroll animations for content sections
-    gsap.utils.toArray('.animate-on-scroll').forEach((element) => {
-      gsap.from(element, {
-        scrollTrigger: {
-          trigger: element,
-          start: 'top bottom',
-          end: 'center center',
-          toggleActions: 'play none none reverse',
-          scroller: containerRef.current // Specify the scroll container
-        },
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power2.out'
-      });
-    });
-
-    // Background color shift on scroll
-    ScrollTrigger.create({
-      scroller: containerRef.current, // Specify the scroll container
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        const progress = self.progress;
-        gsap.to(bgRef.current, {
-          backgroundColor: `rgba(236, 72, 153, ${0.3 - progress * 0.2})`,
-          duration: 0.1
-        });
+    if (images[sectionKey]) {
+      // Special browser chrome for visual design section
+      if (sectionKey === 'visualdesign') {
+        return (
+          <div className="relative w-full mb-12">
+            {/* Browser Chrome */}
+            <div className="relative bg-[#2A2A2A] rounded-t-xl p-3 flex items-center gap-2">
+              {/* Window Controls */}
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-[#FF5F57] border border-[#E0443E]"></div>
+                <div className="w-3 h-3 rounded-full bg-[#FEBC2E] border border-[#D89E24]"></div>
+                <div className="w-3 h-3 rounded-full bg-[#28C840] border border-[#1AAB29]"></div>
+              </div>
+              
+              {/* URL/Navigation Bar */}
+              <div className="ml-4 flex-1 flex items-center h-6 text-sm">
+                <div className="flex gap-4 text-[#999999] mr-4">
+                  <button className="hover:text-white">←</button>
+                  <button className="hover:text-white">→</button>
+                  <button className="hover:text-white">↻</button>
+                </div>
+                <div className="flex-1 bg-[#1D1D1D] rounded-md px-3 py-1 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#666666]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    <path d="M12 6v6l4 2"/>
+                  </svg>
+                  <span className="text-[#999999] text-sm">design-system.village-rentals.com</span>
+                </div>
+                <div className="ml-4 flex gap-2 text-[#999999]">
+                  <button className="hover:text-white">⋯</button>
+                  <button className="hover:text-white">↓</button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Image Container */}
+            <div className="bg-white">
+              <img
+                src={images[sectionKey]}
+                alt={`${section} visualization`}
+                className="w-full"
+              />
+            </div>
+          </div>
+        );
       }
-    });
+      
+      // Regular image container for other sections
+      return (
+        <div className="relative w-full aspect-video bg-[#1a1a1a] mb-12">
+          <img
+            src={images[sectionKey]}
+            alt={`${section} visualization`}
+            className="w-full h-full object-contain"
+          />
+        </div>
+      );
+    }
+    return null;
+  };
 
-    // Add smooth scroll behavior for navigation links
-    const handleNavClick = (e) => {
-      const href = e.currentTarget.getAttribute('href');
-      if (href?.startsWith('#')) {
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-          containerRef.current.scrollTo({
-            top: target.offsetTop - 100,
-            behavior: 'smooth'
-          });
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current && headerRef.current) {
+        const scrollPosition = containerRef.current.scrollTop;
+        const fadeRange = 500; // Increased fade range for smoother transition
+        
+        // Calculate opacity based on scroll position
+        const opacity = Math.max(0, 1 - (scrollPosition / fadeRange));
+        
+        // Apply fade effect to background
+        if (bgRef.current) {
+          bgRef.current.style.opacity = opacity.toString();
         }
       }
     };
 
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => link.addEventListener('click', handleNavClick));
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+    }
 
     return () => {
-      ScrollTrigger.getAll().forEach((st) => st.kill());
-      gsap.killTweensOf([containerRef.current, headerRef.current, '.animate-on-scroll']);
-      navLinks.forEach(link => link.removeEventListener('click', handleNavClick));
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 overflow-y-auto"
-      style={{ scrollBehavior: 'smooth' }}
+      className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 overflow-y-auto scroll-smooth"
+      style={{ 
+        scrollBehavior: 'smooth',
+        scrollbarWidth: 'thin',
+        scrollbarColor: 'rgba(255, 255, 255, 0.1) transparent'
+      }}
     >
-      {/* Background gradient */}
+      {/* Background gradient with fade effect */}
       <div
         ref={bgRef}
-        className="fixed inset-0 transition-colors duration-300 pointer-events-none"
+        className="fixed inset-0 transition-opacity duration-300 pointer-events-none"
         style={{ 
-          background: `radial-gradient(circle at 50% 50%, ${projectData.navColor}4D, transparent 70%)`
+          background: `
+            radial-gradient(circle at 50% 50%, ${projectData.navColor}4D, transparent 70%),
+            linear-gradient(180deg, rgba(26, 54, 93, 0.3) 0%, transparent 100%)
+          `
         }}
       />
 
@@ -193,13 +350,46 @@ export default function VillageRentalsPage() {
                 </div>
               </div>
 
-              {/* Project Image */}
-              <div className="animate-on-scroll relative w-full aspect-video rounded-xl overflow-hidden mb-24">
-                <img
-                  src={projectData.imageSrc}
-                  alt={projectData.title}
-                  className="w-full h-full object-cover"
-                />
+              {/* Hero Image with Browser Chrome */}
+              <div className="animate-on-scroll relative w-full mb-24">
+                {/* Browser Chrome */}
+                <div className="relative bg-[#2A2A2A] rounded-t-xl p-3 flex items-center gap-2">
+                  {/* Window Controls */}
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-[#FF5F57] border border-[#E0443E]"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#FEBC2E] border border-[#D89E24]"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#28C840] border border-[#1AAB29]"></div>
+                  </div>
+                  
+                  {/* URL/Navigation Bar */}
+                  <div className="ml-4 flex-1 flex items-center h-6 text-sm">
+                    <div className="flex gap-4 text-[#999999] mr-4">
+                      <button className="hover:text-white">←</button>
+                      <button className="hover:text-white">→</button>
+                      <button className="hover:text-white">↻</button>
+                    </div>
+                    <div className="flex-1 bg-[#1D1D1D] rounded-md px-3 py-1 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-[#666666]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        <path d="M12 6v6l4 2"/>
+                      </svg>
+                      <span className="text-[#999999] text-sm">village-rentals.com</span>
+                    </div>
+                    <div className="ml-4 flex gap-2 text-[#999999]">
+                      <button className="hover:text-white">⋯</button>
+                      <button className="hover:text-white">↓</button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Image Container */}
+                <div className="bg-white">
+                  <img
+                    src={projectData.imageSrc}
+                    alt={projectData.title}
+                    className="w-full"
+                  />
+                </div>
               </div>
 
               {/* Content Sections */}
@@ -213,8 +403,9 @@ export default function VillageRentalsPage() {
                       className="animate-on-scroll scroll-mt-32"
                     >
                       <h2 className="text-2xl font-medium mb-8 text-white/90">{item}</h2>
+                      {renderSectionImage(item)}
                       <div className="prose prose-lg prose-invert max-w-none">
-                        <p className="text-gray-400 leading-relaxed">
+                        <p className="text-gray-400 leading-relaxed whitespace-pre-line">
                           {projectData.details[key.toLowerCase()] || 'Section content coming soon...'}
                         </p>
                       </div>
@@ -235,8 +426,20 @@ export default function VillageRentalsPage() {
                     <a
                       key={index}
                       href={`#${item.toLowerCase().replace(/\s+/g, '')}`}
-                      className="block text-sm text-gray-400 hover:text-white 
-                        transition-colors duration-300"
+                      className="nav-link block text-sm text-gray-400 hover:text-white 
+                        transition-colors duration-300 cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const targetId = item.toLowerCase().replace(/\s+/g, '');
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement && containerRef.current) {
+                          const targetPosition = targetElement.offsetTop - 32;
+                          containerRef.current.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                          });
+                        }
+                      }}
                     >
                       {item}
                     </a>

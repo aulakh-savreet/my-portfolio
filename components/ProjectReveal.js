@@ -16,7 +16,7 @@ export default function ProjectReveal() {
       name: 'Travel Explorer',
       description: 'Dpt.',
       technologies: ['Vue.js', 'NuxtJS', 'PixiJS', 'Akufen'],
-      image: '/api/placeholder/600/400'
+      image: '/images/hero.webp'
     },
     {
       id: 'task-buddy',
