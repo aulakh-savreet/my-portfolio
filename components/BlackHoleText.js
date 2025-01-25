@@ -3,16 +3,9 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
-/**
- * GLOBAL references so we can pause/resume the animation externally.
- */
 let environment = null;
 let isPaused = false;
 
-/**
- * Called from outside to pause or resume the Three.js render loop.
- * You might call this from a project detail overlay, route change, etc.
- */
 export function setBlackHolePaused(paused) {
   isPaused = paused;
   if (environment && environment.renderer) {
@@ -30,6 +23,13 @@ export default function BlackHoleText() {
   const containerRef = useRef(null);
 
   useEffect(() => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Reduce particle count on mobile for better performance
+    if (this.data && this.data.amount) {
+      this.data.amount = Math.floor(this.data.amount * 0.5);
+    }
+  }
     let envInstance;
 
     const preload = async () => {

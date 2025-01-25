@@ -1,26 +1,133 @@
 import { useRouter } from 'next/router';
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const projectData = {
   id: 'task-buddy',
-  title: 'Task Buddy',
-  subtitle: 'Task Management Platform — February 2024',
-  description: 'A comprehensive task management solution',
-  imageSrc: '/api/placeholder/1200/600',
+  title: 'TaskBuddy',
+  subtitle: 'Next Generation Task Management — June 2023',
+  description: 'Figma-based Kanban task management with real-time collaboration',
+  imageSrc: '/images/task-buddy/main.webp',
   details: {
-    overview: 'Task Buddy revolutionizes personal and team task management with an intuitive, powerful interface.',
-    highlights: 'Smart task categorization, real-time collaboration, and AI-powered task suggestions make organization effortless.',
-    context: 'Developed to address the growing need for flexible, intelligent task management in remote work environments.',
-    theproblem: 'Existing solutions often overwhelm users with complexity while lacking smart features for effective task prioritization.',
-    updateflow: 'Real-time updates and smart notifications keep team members in sync and focused on priorities.',
-    layout: 'Clean, minimalist interface with customizable workspaces and views.',
-    interactions: 'Smooth drag-and-drop, quick actions, and contextual menus enhance productivity.',
-    visualdesign: 'Modern, accessible design with customizable themes and visual hierarchy.',
-    finaldesigns: 'Launched with strong user adoption and positive feedback from productivity enthusiasts.',
-    retrospective: 'Iterative improvements based on user behavior analysis and community feedback.'
+    overview: `TaskBuddy streamlines task management through an intuitive Kanban interface. The Figma-based design system ensures consistency across boards, cards, and collaborative features.`,
+    
+    highlights: `Features:
+    • Drag-and-drop Kanban board layout
+    • Custom task card components  
+    • Team collaboration spaces
+    • Real-time status updates
+    • Mobile-responsive design
+    • Dark/light theme support`,
+    
+    theproblem: `Challenges Addressed:
+    • Complex task organization
+    • Team visibility & coordination  
+    • Status tracking across projects
+    • Mobile accessibility
+    • Cross-platform consistency`,
+    
+    updateflow: `Design Structure:
+    • Component-based architecture
+    • Reusable design tokens
+    • Auto-layout patterns
+    • Responsive constraints
+    • Interaction states`,
+    
+    layout: `Interface Design:
+    • Kanban board grid system
+    • Collapsible list views
+    • Modal task details
+    • Responsive breakpoints
+    • Mobile navigation`,
+    
+    visualdesign: `Design System:
+    • Colors: Primary #0EA5E9, Dark #0F172A
+    • Typography: Inter font family
+    • Component library
+    • Icon system
+    • UI patterns`,
+ 
+    retrospective: `Next Steps:
+    • Enhanced mobile layouts
+    • Timeline views
+    • Analytics dashboard
+    • Team management
+    • Template system`
   },
-  navColor: '#6366f1',
-  technologies: ['React', 'TypeScript', 'Node.js', 'MongoDB']
+  navColor: '#0EA5E9',
+  technologies: [
+    'Figma', 
+    'Auto-layout',
+    'Components',
+    'Variants',
+    'Design Tokens',
+    'Prototyping'
+  ]
+ };
+
+const navigationItems = [
+  'Overview',
+  'Highlights',
+  'The Problem',
+  'Update Flow',
+  'Layout',
+  'Visual Design',
+  'Retrospective'
+];
+
+// Copy the image rendering logic from TravelExplorer
+const renderSectionImage = (section) => {
+  const images = {
+    overview: [
+      '/images/task-buddy/overview-1.webp',
+      '/images/task-buddy/overview-2.webp',
+      '/images/task-buddy/overview-3.webp'
+    ],
+    highlights: '/images/task-buddy/highlights.webp',
+    theproblem: '/images/task-buddy/problem.webp',
+    updateflow: '/images/task-buddy/update-flow.webp',
+    layout: '/images/task-buddy/layout.webp',
+    visualdesign: [
+      '/images/task-buddy/visual-design-1.webp',
+      '/images/task-buddy/visual-design-2.webp',
+      '/images/task-buddy/visual-design-3.webp',
+      '/images/task-buddy/visual-design-4.webp'
+    ],
+    retrospective: '/images/task-buddy/retrospective.webp'
+  };
+
+  const sectionKey = section.toLowerCase().replace(/\s+/g, '');
+  const sectionImages = images[sectionKey];
+
+  // Render multiple images if we have an array (e.g., overview or visualdesign)
+  if (
+    (sectionKey === 'overview' || sectionKey === 'visualdesign') &&
+    Array.isArray(sectionImages)
+  ) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {sectionImages.map((src, index) => (
+          <div key={index} className="relative rounded-xl overflow-hidden">
+            <img
+              src={src}
+              alt={`${section} - ${index + 1}`}
+              className="w-full h-auto object-contain"
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // Render a single image otherwise
+  return sectionImages ? (
+    <div className="relative w-full rounded-xl overflow-hidden mb-8">
+      <img
+        src={sectionImages}
+        alt={`${section} visualization`}
+        className="w-full h-auto object-contain"
+      />
+    </div>
+  ) : null;
 };
 
 export default function TaskBuddyPage() {
@@ -29,19 +136,6 @@ export default function TaskBuddyPage() {
   const headerRef = useRef(null);
   const bgRef = useRef(null);
 
-  const navigationItems = [
-    'Overview',
-    'Highlights',
-    'Context',
-    'The Problem',
-    'Update Flow',
-    'Layout',
-    'Interactions',
-    'Visual Design',
-    'Final Designs',
-    'Retrospective'
-  ];
-
   useEffect(() => {
     if (!projectData || !window.gsap) return;
     
@@ -49,12 +143,11 @@ export default function TaskBuddyPage() {
     const ScrollTrigger = window.ScrollTrigger;
     gsap.registerPlugin(ScrollTrigger);
 
-    // Clear any existing ScrollTriggers
+    // Clear existing triggers
     ScrollTrigger.getAll().forEach((st) => st.kill());
 
-    // Initial fade in animation
+    // Initial fade in
     const tl = gsap.timeline();
-    
     tl.from(containerRef.current, { 
       opacity: 0, 
       duration: 0.5,
@@ -66,7 +159,7 @@ export default function TaskBuddyPage() {
       ease: 'power2.out'
     }, '-=0.3');
 
-    // Scroll animations for content sections
+    // Animate content sections
     gsap.utils.toArray('.animate-on-scroll').forEach((element) => {
       gsap.from(element, {
         scrollTrigger: {
@@ -83,7 +176,7 @@ export default function TaskBuddyPage() {
       });
     });
 
-    // Background color shift on scroll
+    // Background color shift
     ScrollTrigger.create({
       scroller: containerRef.current,
       start: 'top top',
@@ -91,21 +184,22 @@ export default function TaskBuddyPage() {
       onUpdate: (self) => {
         const progress = self.progress;
         gsap.to(bgRef.current, {
-          backgroundColor: `rgba(99, 102, 241, ${0.3 - progress * 0.2})`,
+          backgroundColor: `rgba(14, 165, 233, ${0.3 - progress * 0.2})`,
           duration: 0.1
         });
       }
     });
 
-    // Add smooth scroll behavior for navigation links
+    // Navigation clicks
     const handleNavClick = (e) => {
       const href = e.currentTarget.getAttribute('href');
       if (href?.startsWith('#')) {
         e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
+        const targetEl = document.querySelector(href);
+        if (targetEl && containerRef.current) {
+          const offsetTop = targetEl.offsetTop;
           containerRef.current.scrollTo({
-            top: target.offsetTop - 100,
+            top: offsetTop - 100,
             behavior: 'smooth'
           });
         }
@@ -115,11 +209,45 @@ export default function TaskBuddyPage() {
     const navLinks = document.querySelectorAll('nav a');
     navLinks.forEach(link => link.addEventListener('click', handleNavClick));
 
+    // Highlight current section
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('.nav-link');
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const sectionId = section.id;
+        if (rect.top >= 0 && rect.top < window.innerHeight * 0.4) {
+          navLinks.forEach((link) => {
+            link.classList.toggle('text-white', link.hash === `#${sectionId}`);
+          });
+        }
+      });
+    });
+
     return () => {
-      ScrollTrigger.getAll().forEach((st) => st.kill());
-      gsap.killTweensOf([containerRef.current, headerRef.current, '.animate-on-scroll']);
       navLinks.forEach(link => link.removeEventListener('click', handleNavClick));
+      ScrollTrigger.getAll().forEach((st) => st.kill());
     };
+  }, []);
+
+  useEffect(() => {
+    function highlightCurrentSection() {
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('.nav-link');
+      let currentSectionId = '';
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.5 && rect.bottom >= 0) {
+          currentSectionId = section.id;
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('text-white', link.hash === `#${currentSectionId}`);
+      });
+    }
+    window.addEventListener('scroll', highlightCurrentSection);
+    highlightCurrentSection();
+    return () => window.removeEventListener('scroll', highlightCurrentSection);
   }, []);
 
   return (
@@ -193,7 +321,7 @@ export default function TaskBuddyPage() {
                 </div>
               </div>
 
-              {/* Project Image */}
+              {/* Hero Image */}
               <div className="animate-on-scroll relative w-full aspect-video rounded-xl overflow-hidden mb-24">
                 <img
                   src={projectData.imageSrc}
@@ -213,9 +341,10 @@ export default function TaskBuddyPage() {
                       className="animate-on-scroll scroll-mt-32"
                     >
                       <h2 className="text-2xl font-medium mb-8 text-white/90">{item}</h2>
+                      {renderSectionImage(item)}
                       <div className="prose prose-lg prose-invert max-w-none">
                         <p className="text-gray-400 leading-relaxed">
-                          {projectData.details[key.toLowerCase()] || 'Section content coming soon...'}
+                          {projectData.details[key] || 'Section content coming soon...'}
                         </p>
                       </div>
                     </section>
@@ -235,7 +364,7 @@ export default function TaskBuddyPage() {
                     <a
                       key={index}
                       href={`#${item.toLowerCase().replace(/\s+/g, '')}`}
-                      className="block text-sm text-gray-400 hover:text-white 
+                      className="nav-link block text-sm text-gray-400 hover:text-white 
                         transition-colors duration-300"
                     >
                       {item}

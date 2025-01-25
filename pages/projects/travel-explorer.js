@@ -6,11 +6,15 @@ const projectData = {
   title: 'TravelExplorer',
   subtitle: 'World Discovery Platform — December 2024',
   description: 'A comprehensive travel and country information platform',
-  imageSrc: '/images/hero.webp',
+  imageSrc: '/images/travel-explorer/hero.webp',
   details: {
-    overview: `TravelExplorer is a modern web application designed to bridge the gap between travelers and comprehensive country information. Built with accessibility and user experience in mind, it serves as a centralized platform for discovering detailed information about countries worldwide.
+    overview: `TravelExplorer delivers comprehensive country data through an intuitive card interface, featuring:
 
-    The platform combines data from multiple reliable sources, including the REST Countries API and OpenWeather API, to provide users with up-to-date information about countries, their characteristics, and current weather conditions.`,
+    • Detailed country cards with key statistics
+    • Interactive maps with location markers
+    • Real-time weather conditions
+    • Regional subdivisions
+    • Latest news updates`,
     
     highlights: `Key Features:
     • Interactive country search with real-time filtering
@@ -56,23 +60,14 @@ const projectData = {
     • Optimized images with next/image
     • Employed service worker for offline capabilities`,
     
-    layout: `The interface follows a systematic grid system that adapts to different screen sizes while maintaining visual hierarchy. Key layout considerations included:
+    layout: `The interface incorporates a hierarchical region selection system with state/province breakdown for major countries. The dropdown employs:
 
-    • Consistent spacing using 8px grid system
-    • Flexible card components for country information
-    • Responsive navigation with mobile-first approach
-    • Strategic use of white space for readability
-    • Accessible color contrast ratios
-    • Semantic HTML structure`,
-    
-    interactions: `User interactions were carefully crafted to enhance the experience:
-    
-    • Smooth animations for state transitions
-    • Interactive hover states for clickable elements
-    • Loading skeletons for perceived performance
-    • Error states with helpful recovery actions
-    • Keyboard navigation support
-    • Touch-friendly interface elements`,
+    • Alphabetically sorted regions and states
+    • Clear hierarchical structure
+    • Accessible keyboard navigation
+    • Mobile-friendly touch targets
+
+The overall interface follows a systematic grid system`,
     
     visualdesign: `The visual design system emphasizes clarity and accessibility:
 
@@ -88,22 +83,6 @@ const projectData = {
     • Consistent type scale with 1.25 ratio
 
     Components follow atomic design principles for consistency and maintainability.`,
-    
-    finaldesigns: `The launched product achieved significant metrics:
-    
-    Performance:
-    • 98/100 Lighthouse performance score
-    • 0.8s First Contentful Paint
-    • 2.1s Time to Interactive
-    
-    User Engagement:
-    • 89% user satisfaction rate
-    • 45% decrease in bounce rate
-    • 60% increase in average session duration
-    
-    Accessibility:
-    • WCAG 2.1 AA compliance
-    • 100/100 Lighthouse accessibility score`,
     
     retrospective: `Key Learnings:
     • Early accessibility consideration saved development time
@@ -142,47 +121,47 @@ export default function TravelExplorerPage() {
     'The Problem',
     'Update Flow',
     'Layout',
-    'Interactions',
     'Visual Design',
-    'Final Designs',
     'Retrospective'
   ];
 
   // Function to render section images
   const renderSectionImage = (section) => {
     const images = {
-      overview: '/images/travel-explorer/overview.webp',
+      overview: [
+        '/images/travel-explorer/country-detail.webp', 
+        '/images/travel-explorer/news-results.webp',
+        '/images/travel-explorer/map-view.webp'
+      ],
       highlights: '/images/travel-explorer/highlights.webp',
-      context: '/images/travel-explorer/context.webp',
       theproblem: '/images/travel-explorer/problem.webp',
       updateflow: '/images/travel-explorer/flow.webp',
       layout: '/images/travel-explorer/layout.webp',
-      interactions: '/images/travel-explorer/interactions.webp',
       visualdesign: '/images/travel-explorer/design.webp',
-      finaldesigns: '/images/travel-explorer/final.webp',
       retrospective: '/images/travel-explorer/retro.webp'
     };
-
+   
     const sectionKey = section.toLowerCase().replace(/\s+/g, '');
-    
-    if (images[sectionKey]) {
+    const sectionImages = images[sectionKey];
+   
+    if (sectionKey === 'overview') {
       return (
-        <div className="relative w-full aspect-video bg-[#1a1a1a] rounded-xl overflow-hidden mb-12">
-          <img
-            src={images[sectionKey]}
-            alt={`${section} visualization`}
-            className="w-full h-full object-contain p-8"
-          />
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-            <p className="text-sm text-white/70">
-              {section} visualization showing key aspects and relationships
-            </p>
-          </div>
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          {sectionImages.map((src, index) => (
+            <div key={index} className="relative aspect-video rounded-xl overflow-hidden">
+              <img src={src} alt={`${section} view ${index + 1}`} className="w-full h-full object-cover"/>
+            </div>
+          ))}
         </div>
       );
     }
-    return null;
-  };
+   
+    return sectionImages ? (
+      <div className="relative w-full aspect-video bg-[#1a1a1a] rounded-xl overflow-hidden mb-8">
+        <img src={sectionImages} alt={`${section} visualization`} className="w-full h-full object-contain p-8" />
+      </div>
+    ) : null;
+   };
 
   useEffect(() => {
     if (!projectData || !window.gsap) return;

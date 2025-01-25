@@ -12,27 +12,108 @@ body {
   -ms-overflow-style: none; /* for Internet Explorer, Edge */
   scrollbar-width: none; /* for Firefox */
   @apply transition-colors duration-500;
+  /* Prevent pull-to-refresh and rubber-banding on mobile */
+  overscroll-behavior-y: none;
+  /* Ensure proper height on mobile */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Fixes for mobile Safari */
+html {
+  height: -webkit-fill-available;
 }
 
 body::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
 }
 
-/* Remove the extra transform to avoid double 100% offset */
-.project-overlay {
-  /* transform: translateY(100%);  <--- REMOVED to avoid conflict */
-  will-change: transform;
-  z-index: 50; /* So it appears above the Hero (zIndex:40) */
+/* Improve touch interactions */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
-/* Keep existing transitions for project-section if needed */
+/* Fix 100vh on mobile */
+.min-h-screen {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Project overlay styles */
+.project-overlay {
+  will-change: transform;
+  z-index: 50;
+  /* Enable hardware acceleration */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Project section transitions */
 .project-section {
   opacity: 1;
   transition: opacity 0.5s ease;
+  /* Enable GPU acceleration for smoother animations */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .project-section .content,
 .project-section .image {
   opacity: 0;
   transform: translateY(100px);
+}
+
+/* Smooth scrolling except for users who prefer reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  /* Better mobile performance */
+  * {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* Improved touch targets */
+  a, button {
+    padding: min(1rem, 10px);
+  }
+  
+  /* Prevent text selection during animations */
+  .animate-on-scroll {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+/* Fix for sticky hover on mobile */
+@media (hover: hover) {
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* Optimize animations for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Enhanced touch handling for interactive elements */
+.interactive {
+  cursor: pointer;
+  touch-action: manipulation;
 }

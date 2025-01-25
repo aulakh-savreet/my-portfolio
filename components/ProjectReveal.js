@@ -15,22 +15,22 @@ export default function ProjectReveal() {
       id: 'travel-explorer',
       name: 'Travel Explorer',
       description: 'Dpt.',
-      technologies: ['Vue.js', 'NuxtJS', 'PixiJS', 'Akufen'],
-      image: '/images/hero.webp'
+      technologies: ['Next.js', 'React', 'Tailwind CSS', 'REST Countries API', 'OpenWeather API', 'SWR', 'Vercel'],
+      image: '/images/travel-explorer/hero.webp'
     },
     {
       id: 'task-buddy',
       name: 'Task Buddy',
       description: 'Interactive historical experience',
-      technologies: ['React', 'Three.js', 'GSAP'],
-      image: '/api/placeholder/600/400'
+      technologies: ['Figma', 'Auto-layout', 'Components', 'Variants', 'Design Tokens', 'Prototyping'],
+      image: '/images/task-buddy/hero.webp'
     },
     {
       id: 'village-rentals',
       name: 'VIllage Rentals',
       description: 'Digital art platform',
       technologies: ['Next.js', 'WebGL', 'Framer Motion'],
-      image: '/api/placeholder/600/400'
+      image: '/images/village-rentals/hero.webp'
     }
   ];
 
@@ -209,10 +209,10 @@ export default function ProjectReveal() {
           </div>
 
           <div 
-            className="preview-window fixed bottom-8 right-8 w-96 h-64 rounded-3xl overflow-hidden shadow-2xl"
+            className="preview-window fixed bottom-8 right-8 w-[480px] h-[320px] overflow-hidden shadow-2xl" // Increased size, removed rounded corners
             style={{
               opacity: activeProject ? 1 : 0,
-              transform: `scale(${activeProject ? 1 : 0.8})`,
+              transform: activeProject ? 'scale(1)' : 'scale(0.8)', // Removed extra scaling
               zIndex: 40,
               pointerEvents: 'none',
               transition: 'all 0.3s ease'
@@ -222,7 +222,7 @@ export default function ProjectReveal() {
               <img
                 src={activeProject.image}
                 alt={activeProject.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center" // Removed scale-105
               />
             )}
           </div>

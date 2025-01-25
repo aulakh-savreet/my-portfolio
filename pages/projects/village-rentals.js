@@ -28,9 +28,21 @@ const projectData = {
     • Built comprehensive reporting system
     • Integrated real-time cost calculations`,
     
-    context: `Village Rentals has been a cornerstone of the local community since the 1950s, traditionally managing their operations through manual ledgers and later basic spreadsheets. With rapid township development and expanding inventory, the business needed a modern solution that could scale while maintaining their high standards of service.
+    context: `Village Rentals' modernization project involved two key phases:
 
-    The project aimed to digitize their operations while ensuring the system remained intuitive for staff familiar with traditional methods.`,
+Design Phase:
+• Created modern web-based prototype in Figma
+• Focused on intuitive UI/UX for future web platform
+• Developed comprehensive design system
+• Established visual language and interaction patterns
+
+Implementation Phase:
+• Built Python/Tkinter desktop application as initial solution
+• Focused on core functionality and data management
+• Implemented essential rental operations
+• Created foundation for future web migration
+
+This two-phase approach allowed for both long-term vision planning and immediate operational improvements.`,
     
     theproblem: `Challenges with Previous System:
     • Manual spreadsheet-based tracking
@@ -62,23 +74,24 @@ const projectData = {
        • Real-time validation
        • Responsive form handling`,
     
-    layout: `The interface follows a structured layout emphasizing usability:
+    layout: `The initial prototype features a modern web interface with sleek design elements, while the implemented desktop application follows a tabbed structure optimized for desktop usage:
 
-    • Tabbed navigation for main functions
-    • Consistent form layouts
-    • Clear visual hierarchy
-    • Status indicators for equipment
-    • Intuitive data entry flows
-    • Modal windows for focused tasks`,
-    
-    interactions: `User interactions were designed for efficiency:
-    
-    • Real-time cost calculations
-    • Dynamic form validation
-    • Automated ID generation
-    • Status updates
-    • Search functionality
-    • Error handling with clear messaging`,
+• Main Navigation: Tab-based system with Equipment, Customers, and Rentals sections
+• Equipment Management View:
+  - Action buttons (Manage Equipment, Add Equipment, Delete Selected, Refresh List)
+  - Data grid showing equipment details (ID, Name, Category, Description, Daily Rate, Availability)
+  - Clear column headers and organized data presentation
+• Data Entry Forms:
+  - Logical field grouping
+  - Required field indicators
+  - Standardized input controls
+• List Views:
+  - Sortable columns
+  - Clear row separation
+  - Status indicators
+  - Consistent data formatting
+
+The layout prioritizes efficiency and clarity, allowing users to quickly access and manage rental operations through a familiar desktop interface pattern.`,
     
     visualdesign: `The visual design system demonstrates excellent enterprise UX principles:
 Color Scheme:
@@ -160,7 +173,6 @@ export default function VillageRentalsPage() {
     'The Problem',
     'Update Flow',
     'Layout',
-    'Interactions',
     'Visual Design',
     'Final Designs',
     'Retrospective'
@@ -170,77 +182,115 @@ export default function VillageRentalsPage() {
   const renderSectionImage = (section) => {
     const images = {
       overview: '/images/village-rentals/overview.webp',
-      highlights: '/images/village-rentals/highlights.webp',
+      highlights: [
+        '/images/village-rentals/highlights-1.webp',
+        '/images/village-rentals/highlights-2.webp',
+        '/images/village-rentals/highlights-3.webp',
+        '/images/village-rentals/highlights-4.webp'
+      ],
       context: '/images/village-rentals/context.webp',
       theproblem: '/images/village-rentals/problem.webp',
       updateflow: '/images/village-rentals/flow.webp',
       layout: '/images/village-rentals/layout.webp',
-      interactions: '/images/village-rentals/interactions.webp',
       visualdesign: '/images/village-rentals/design.webp',
       finaldesigns: '/images/village-rentals/final.webp',
       retrospective: '/images/village-rentals/retro.webp'
     };
 
     const sectionKey = section.toLowerCase().replace(/\s+/g, '');
-    
-    if (images[sectionKey]) {
-      // Special browser chrome for visual design section
-      if (sectionKey === 'visualdesign') {
-        return (
-          <div className="relative w-full mb-12">
-            {/* Browser Chrome */}
-            <div className="relative bg-[#2A2A2A] rounded-t-xl p-3 flex items-center gap-2">
-              {/* Window Controls */}
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-[#FF5F57] border border-[#E0443E]"></div>
-                <div className="w-3 h-3 rounded-full bg-[#FEBC2E] border border-[#D89E24]"></div>
-                <div className="w-3 h-3 rounded-full bg-[#28C840] border border-[#1AAB29]"></div>
-              </div>
-              
-              {/* URL/Navigation Bar */}
-              <div className="ml-4 flex-1 flex items-center h-6 text-sm">
-                <div className="flex gap-4 text-[#999999] mr-4">
-                  <button className="hover:text-white">←</button>
-                  <button className="hover:text-white">→</button>
-                  <button className="hover:text-white">↻</button>
-                </div>
-                <div className="flex-1 bg-[#1D1D1D] rounded-md px-3 py-1 flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#666666]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                    <path d="M12 6v6l4 2"/>
-                  </svg>
-                  <span className="text-[#999999] text-sm">design-system.village-rentals.com</span>
-                </div>
-                <div className="ml-4 flex gap-2 text-[#999999]">
-                  <button className="hover:text-white">⋯</button>
-                  <button className="hover:text-white">↓</button>
-                </div>
-              </div>
+    const sectionImages = images[sectionKey];
+
+    // Special case for 'visualdesign' (unchanged)
+    if (sectionKey === 'visualdesign') {
+      return (
+        <div className="relative w-full mb-12">
+          <div className="relative bg-[#2A2A2A] rounded-2xl p-3 flex items-center gap-2">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-[#FF5F57] border border-[#E0443E]" />
+              <div className="w-3 h-3 rounded-full bg-[#FEBC2E] border border-[#D89E24]" />
+              <div className="w-3 h-3 rounded-full bg-[#28C840] border border-[#1AAB29]" />
             </div>
-            
-            {/* Image Container */}
-            <div className="bg-white">
-              <img
-                src={images[sectionKey]}
-                alt={`${section} visualization`}
-                className="w-full"
-              />
+            <div className="ml-4 flex-1 flex items-center h-6 text-sm">
+              <div className="flex gap-4 text-[#999999] mr-4">
+                <button className="hover:text-white">←</button>
+                <button className="hover:text-white">→</button>
+                <button className="hover:text-white">↻</button>
+              </div>
+              <div className="flex-1 bg-[#1D1D1D] rounded-md px-3 py-1 flex items-center gap-2">
+                <svg
+                  className="w-4 h-4 text-[#666666]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                <span className="text-[#999999] text-sm">
+                  design-system.village-rentals.com
+                </span>
+              </div>
+              <div className="ml-4 flex gap-2 text-[#999999]">
+                <button className="hover:text-white">⋯</button>
+                <button className="hover:text-white">↓</button>
+              </div>
             </div>
           </div>
-        );
-      }
-      
-      // Regular image container for other sections
+          <div className="bg-white rounded-b-2xl overflow-hidden">
+            <img
+              src={sectionImages}
+              alt={`${section} visualization`}
+              className="w-full object-contain"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // For layout image, ensure it's less constrained
+    if (sectionKey === 'layout') {
       return (
-        <div className="relative w-full aspect-video bg-[#1a1a1a] mb-12">
+        <div className="relative w-full rounded-2xl overflow-hidden mb-8">
           <img
-            src={images[sectionKey]}
+            src={sectionImages}
+            alt={`${section} visualization`}
+            className="w-full h-auto object-contain"
+          />
+        </div>
+      );
+    }
+
+    // For highlights with 4 images, round edges & reduce gap
+    if (sectionKey === 'highlights' && Array.isArray(sectionImages)) {
+      return (
+        <div className="grid grid-cols-2 gap-2 mb-8">
+          {sectionImages.map((src, index) => (
+            <div key={index} className="relative aspect-square rounded-2xl overflow-hidden">
+              <img
+                src={src}
+                alt={`${section}-image-${index + 1}`}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // For single-image sections, add rounded edges
+    if (sectionImages && !Array.isArray(sectionImages)) {
+      return (
+        <div className="relative w-full aspect-video bg-[#1a1a1a] mb-12 rounded-2xl overflow-hidden">
+          <img
+            src={sectionImages}
             alt={`${section} visualization`}
             className="w-full h-full object-contain"
           />
         </div>
       );
     }
+
     return null;
   };
 
