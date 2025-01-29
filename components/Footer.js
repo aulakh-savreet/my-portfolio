@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 
 export default function Footer() {
   const containerRef = useRef(null);
@@ -11,7 +11,7 @@ export default function Footer() {
     gsap.killTweensOf([
       '.footer-title span', 
       '.footer-logo', 
-      '.footer-technologies li', 
+      '.footer-technologies span', 
       '.footer-links',
       '.glow-text'
     ]);
@@ -55,11 +55,11 @@ export default function Footer() {
             ease: 'power3.out'
           });
 
-          gsap.to('.footer-technologies li', {
-            x: 0,
+          gsap.to('.footer-technologies span', {
+            y: 0,
             opacity: 1,
             duration: 0.6,
-            stagger: 0.1,
+            stagger: 0.05,
             ease: 'power3.out'
           });
 
@@ -77,7 +77,7 @@ export default function Footer() {
     // Set initial states
     gsap.set('.footer-title span', { y: 100, opacity: 0 });
     gsap.set('.footer-logo', { scale: 0.8, opacity: 0 });
-    gsap.set('.footer-technologies li', { x: -20, opacity: 0 });
+    gsap.set('.footer-technologies span', { y: 20, opacity: 0 });
     gsap.set('.footer-links', { y: 20, opacity: 0 });
 
     return () => {
@@ -85,7 +85,7 @@ export default function Footer() {
       gsap.killTweensOf([
         '.footer-title span', 
         '.footer-logo', 
-        '.footer-technologies li', 
+        '.footer-technologies span', 
         '.footer-links',
         '.glow-text'
       ]);
@@ -133,7 +133,7 @@ export default function Footer() {
 
             <div className="mb-16">
               <h2 className="footer-title text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
-                {['DESIGN', 'WITH', 'CODE.', 'BUILT', 'TO', 'LAST.'].map((word, index) => (
+                {['DESIGN', 'ENVISIONS.', 'CODE', 'MANIFESTS.'].map((word, index) => (
                   <span 
                     key={index} 
                     className="inline-block mr-4 mb-2 glow-text"
@@ -153,15 +153,95 @@ export default function Footer() {
           {/* Right Column - Technologies and Links */}
           <div className="col-span-12 lg:col-span-6 lg:flex lg:flex-col lg:items-end">
             {/* Technologies section with updated styling */}
-            <div className="mb-16 w-full lg:w-auto">
-              <h3 className="text-4xl md:text-5xl tracking-wider text-white/50 mb-12 glow-text text-left font-light">TECHNOLOGIES</h3>
-              <div className="footer-technologies grid grid-cols-2 gap-x-12 gap-y-6 text-right">
-                {technologies.map((tech) => (
-                  <div key={tech} className="flex items-center justify-end gap-2 whitespace-nowrap">
-                    <span className="font-light glow-text text-xl tracking-wide">{tech}</span>
-                    <span className="text-white/30">•</span>
+            <div className="mb-12 w-full">
+              <h3 className="relative text-3xl md:text-4xl tracking-wider text-white mb-10 inline-block">
+                <span className="bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent">
+                  TECHNOLOGIES
+                </span>
+                <div className="absolute -bottom-4 left-0 w-1/3 h-1 bg-gradient-to-r from-purple-500 to-transparent"></div>
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Frontend Section */}
+                <div className="tech-section relative group bg-gradient-to-b from-purple-500/10 to-transparent 
+                  backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-purple-500/50 
+                  transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-b from-purple-500/20 via-purple-500/5 to-transparent 
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                  <h4 className="text-lg font-medium text-white mb-4 relative">
+                    <span className="bg-gradient-to-r from-purple-400 to-white bg-clip-text text-transparent">
+                      Frontend
+                    </span>
+                  </h4>
+                  <div className="space-y-2 relative">
+                    {["React", "Next.js", "TypeScript", "JavaScript", "Three.js", "GSAP"].map((tech) => (
+                      <div key={tech} 
+                        className="tech-item group/item flex items-center gap-3 p-2 rounded-lg
+                        bg-black/20 hover:bg-purple-500/20 transition-all duration-300
+                        border border-white/5 hover:border-purple-500/30">
+                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500/50 group-hover/item:bg-purple-400 
+                          transition-colors duration-300"></div>
+                        <span className="text-sm text-white/70 group-hover/item:text-white transition-colors duration-300">
+                          {tech}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+
+                {/* Backend Section */}
+                <div className="tech-section relative group bg-gradient-to-b from-blue-500/10 to-transparent 
+                  backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-blue-500/50 
+                  transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 via-blue-500/5 to-transparent 
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                  <h4 className="text-lg font-medium text-white mb-4 relative">
+                    <span className="bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent">
+                      Backend
+                    </span>
+                  </h4>
+                  <div className="space-y-2 relative">
+                    {["Node.js", "Python", "Java", "C#", ".NET", "SQL"].map((tech) => (
+                      <div key={tech} 
+                        className="tech-item group/item flex items-center gap-3 p-2 rounded-lg
+                        bg-black/20 hover:bg-blue-500/20 transition-all duration-300
+                        border border-white/5 hover:border-blue-500/30">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover/item:bg-blue-400 
+                          transition-colors duration-300"></div>
+                        <span className="text-sm text-white/70 group-hover/item:text-white transition-colors duration-300">
+                          {tech}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tools & Design Section */}
+                <div className="tech-section relative group bg-gradient-to-b from-emerald-500/10 to-transparent 
+                  backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-emerald-500/50 
+                  transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/20 via-emerald-500/5 to-transparent 
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                  <h4 className="text-lg font-medium text-white mb-4 relative">
+                    <span className="bg-gradient-to-r from-emerald-400 to-white bg-clip-text text-transparent">
+                      Tools & Design
+                    </span>
+                  </h4>
+                  <div className="space-y-2 relative">
+                    {["Git", "Firebase", "Figma", "AWS", "Docker", "Vercel"].map((tech) => (
+                      <div key={tech} 
+                        className="tech-item group/item flex items-center gap-3 p-2 rounded-lg
+                        bg-black/20 hover:bg-emerald-500/20 transition-all duration-300
+                        border border-white/5 hover:border-emerald-500/30">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50 group-hover/item:bg-emerald-400 
+                          transition-colors duration-300"></div>
+                        <span className="text-sm text-white/70 group-hover/item:text-white transition-colors duration-300">
+                          {tech}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -193,31 +273,35 @@ export default function Footer() {
               </div>
             </div>
 
+            {/* Footer Bottom Links */}
             <div className="absolute bottom-8 left-12 text-sm text-white/50">
-                <a href="#" className="hover:text-white/75 transition-colors glow-text">TERMS OF USE</a>
-                <span className="mx-4">•</span>
-                <a href="#" className="hover:text-white/75 transition-colors glow-text">PRIVACY POLICY</a>
-                <span className="mx-4">•</span>
-                <a href="#" className="hover:text-white/75 transition-colors glow-text">BASED IN CALGARY</a>
+              <a href="#" className="hover:text-white/75 transition-colors glow-text">TERMS OF USE</a>
+              <span className="mx-4">•</span>
+              <a href="#" className="hover:text-white/75 transition-colors glow-text">PRIVACY POLICY</a>
+              <span className="mx-4">•</span>
+              <a href="#" className="hover:text-white/75 transition-colors glow-text">BASED IN CALGARY</a>
             </div>
+
+            {/* Back to Top Button */}
             <div className="absolute bottom-8 right-12">
-                <button 
-                  onClick={handleBackToTop}
-                  className="bg-white text-black px-6 py-3 rounded-full hover:bg-white/90 transition-all hover:scale-105 flex items-center gap-2 glow-text"
+              <button 
+                onClick={handleBackToTop}
+                className="bg-white text-black px-6 py-3 rounded-full hover:bg-white/90 
+                  transition-all hover:scale-105 flex items-center gap-2 glow-text"
+              >
+                Back to top
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2"
+                  className="transform transition-transform group-hover:-translate-y-1"
                 >
-                  Back to top
-                  <svg 
-                    width="24" 
-                    height="24" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2"
-                    className="transform transition-transform group-hover:-translate-y-1"
-                  >
-                    <path d="M12 19V5M5 12l7-7 7 7"/>
-                  </svg>
-                </button>
+                  <path d="M12 19V5M5 12l7-7 7 7"/>
+                </svg>
+              </button>
             </div>
           </div>
         </div>

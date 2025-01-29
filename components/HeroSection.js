@@ -149,19 +149,62 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Animated Scroll Indicator */}
       <div className="hero-element absolute bottom-12 left-1/2 -translate-x-1/2 z-30">
         <span 
           className="block text-white/40 text-sm text-center mb-4"
           style={{ 
             fontFamily: 'Space Grotesk',
             letterSpacing: '0.3em',
-            fontWeight: 300
+            fontWeight: 300,
+            animation: 'pulse 2s infinite'
           }}
         >
           SCROLL
         </span>
-        <div className="w-px h-16 mx-auto bg-gradient-to-b from-white/40 to-transparent" />
+        <div 
+          className="relative w-px h-16 mx-auto overflow-hidden"
+          style={{ animation: 'bounce 2s infinite cubic-bezier(0.4, 0, 0.2, 1)' }}
+        >
+          <div 
+            className="absolute top-0 left-0 w-full h-full"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%)',
+              animation: 'glow 2s infinite'
+            }}
+          />
+        </div>
+        <style jsx>{`
+          @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+              transform: translateY(0);
+            }
+            40% {
+              transform: translateY(-18px);
+            }
+            60% {
+              transform: translateY(-10px);
+            }
+          }
+          
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 0.4;
+            }
+            50% {
+              opacity: 0.8;
+            }
+          }
+          
+          @keyframes glow {
+            0%, 100% {
+              opacity: 0.7;
+            }
+            50% {
+              opacity: 1;
+            }
+          }
+        `}</style>
       </div>
     </div>
   );
