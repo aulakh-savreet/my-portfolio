@@ -11,7 +11,7 @@ export default function Footer() {
     gsap.killTweensOf([
       '.footer-title span', 
       '.footer-logo', 
-      '.footer-services li', 
+      '.footer-technologies li', 
       '.footer-links',
       '.glow-text'
     ]);
@@ -55,7 +55,7 @@ export default function Footer() {
             ease: 'power3.out'
           });
 
-          gsap.to('.footer-services li', {
+          gsap.to('.footer-technologies li', {
             x: 0,
             opacity: 1,
             duration: 0.6,
@@ -77,7 +77,7 @@ export default function Footer() {
     // Set initial states
     gsap.set('.footer-title span', { y: 100, opacity: 0 });
     gsap.set('.footer-logo', { scale: 0.8, opacity: 0 });
-    gsap.set('.footer-services li', { x: -20, opacity: 0 });
+    gsap.set('.footer-technologies li', { x: -20, opacity: 0 });
     gsap.set('.footer-links', { y: 20, opacity: 0 });
 
     return () => {
@@ -85,7 +85,7 @@ export default function Footer() {
       gsap.killTweensOf([
         '.footer-title span', 
         '.footer-logo', 
-        '.footer-services li', 
+        '.footer-technologies li', 
         '.footer-links',
         '.glow-text'
       ]);
@@ -96,25 +96,33 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const services = [
-    'FRONTEND DEVELOPMENT',
+  const technologies = [
     'REACT / NEXT.JS',
-    'UI DEVELOPMENT',
-    'WEB ANIMATION',
-    'RESPONSIVE DESIGN',
-    'PERFORMANCE OPTIMIZATION'
+    'TYPESCRIPT',
+    'JAVASCRIPT',
+    'PYTHON',
+    'SQL',
+    'THREE.JS',
+    'GSAP',
+    'FIREBASE',
+    'NODE.JS',
+    'FIGMA',
+    'GIT',
+    'JAVA',
+    'C#',
+    '.NET',
   ];
 
   return (
     <footer 
       ref={containerRef}
-      className="relative w-full bg-[#030712] text-white min-h-screen flex items-center" 
+      className="relative w-full bg-[#030712] text-white h-screen flex items-center"
       style={{ zIndex: 100 }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[#080C15] via-[#030712] to-black opacity-80" />
       
-      <div className="max-w-screen-2xl mx-auto relative px-12 w-full flex flex-col justify-between min-h-screen">
-        <div className="grid grid-cols-12 gap-8 h-full" style={{ paddingTop: '15vh' }}>
+      <div className="max-w-screen-2xl mx-auto relative px-12 w-full flex flex-col h-screen">
+        <div className="grid grid-cols-12 gap-8 h-full" style={{ paddingTop: '10vh' }}>
           {/* Left Column - Logo and Title */}
           <div className="col-span-12 lg:col-span-6">
             <div className="mb-16">
@@ -142,52 +150,60 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Right Column - Services and Links */}
+          {/* Right Column - Technologies and Links */}
           <div className="col-span-12 lg:col-span-6 lg:flex lg:flex-col lg:items-end">
-            {/* Services section with updated styling */}
+            {/* Technologies section with updated styling */}
             <div className="mb-16 w-full lg:w-auto">
-              <h3 className="text-sm tracking-wider text-white/50 mb-6 glow-text">SERVICES</h3>
-              <ul className="footer-services space-y-4 text-right">
-                {services.map((service) => (
-                  <li key={service} className="flex items-center justify-end gap-2 text-lg whitespace-nowrap">
-                    <span className="font-light glow-text">{service}</span>
+              <h3 className="text-4xl md:text-5xl tracking-wider text-white/50 mb-12 glow-text text-left font-light">TECHNOLOGIES</h3>
+              <div className="footer-technologies grid grid-cols-2 gap-x-12 gap-y-6 text-right">
+                {technologies.map((tech) => (
+                  <div key={tech} className="flex items-center justify-end gap-2 whitespace-nowrap">
+                    <span className="font-light glow-text text-xl tracking-wide">{tech}</span>
                     <span className="text-white/30">•</span>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
-            {/* Rest of the footer content remains the same */}
             <div className="mb-12">
-              <h3 className="text-sm tracking-wider text-white/50 mb-6 glow-text">FOLLOW</h3>
+              <h3 className="text-sm tracking-wider text-white/50 mb-6 glow-text text-right">LINKS</h3>
               <div className="footer-links flex gap-6 justify-end">
-                <a href="#" className="text-white/75 hover:text-white transition-colors glow-text">
+                <a 
+                  href="https://github.com/aulakh-savreet" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-white/75 hover:text-white transition-colors glow-text"
+                >
                   <Github size={20} />
                 </a>
-                <a href="#" className="text-white/75 hover:text-white transition-colors glow-text">
+                <a 
+                  href="https://linkedin.com/in/savreet-aulakh" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-white/75 hover:text-white transition-colors glow-text"
+                >
                   <Linkedin size={20} />
                 </a>
-                <a href="#" className="text-white/75 hover:text-white transition-colors glow-text">
+                <a 
+                  href="mailto:aulakh.savreet@gmail.com" 
+                  className="text-white/75 hover:text-white transition-colors glow-text"
+                >
                   <Mail size={20} />
                 </a>
               </div>
             </div>
 
-            <div className="footer-links text-sm text-white/50 mb-8 glow-text">
-              • BASED IN CALGARY
-            </div>
-
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-12 mt-auto pt-16">
-              <div className="footer-links flex gap-6 text-sm text-white/50">
+            <div className="absolute bottom-8 left-12 text-sm text-white/50">
                 <a href="#" className="hover:text-white/75 transition-colors glow-text">TERMS OF USE</a>
-                <span>•</span>
+                <span className="mx-4">•</span>
                 <a href="#" className="hover:text-white/75 transition-colors glow-text">PRIVACY POLICY</a>
-              </div>
-
-              <div className="footer-links flex items-center gap-8">
+                <span className="mx-4">•</span>
+                <a href="#" className="hover:text-white/75 transition-colors glow-text">BASED IN CALGARY</a>
+            </div>
+            <div className="absolute bottom-8 right-12">
                 <button 
                   onClick={handleBackToTop}
-                  className="flex items-center gap-2 text-white/75 hover:text-white transition-colors group glow-text"
+                  className="bg-white text-black px-6 py-3 rounded-full hover:bg-white/90 transition-all hover:scale-105 flex items-center gap-2 glow-text"
                 >
                   Back to top
                   <svg 
@@ -202,11 +218,6 @@ export default function Footer() {
                     <path d="M12 19V5M5 12l7-7 7 7"/>
                   </svg>
                 </button>
-                <button className="bg-white text-black px-6 py-3 rounded-full hover:bg-white/90 transition-all hover:scale-105 flex items-center gap-2 glow-text">
-                  Let's talk
-                  <ArrowUpRight size={18} className="transform transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </button>
-              </div>
             </div>
           </div>
         </div>
