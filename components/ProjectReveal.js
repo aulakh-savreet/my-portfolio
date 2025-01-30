@@ -31,7 +31,28 @@ export default function ProjectReveal() {
       description: 'Digital art platform',
       technologies: ['Next.js', 'WebGL', 'Framer Motion'],
       image: '/images/village-rentals/hero.webp'
-    }
+    },
+    {
+      id: 'Odyssey-detaling ',
+      name: 'Odyssey Detaling',
+      description: 'Car detaling website',
+      technologies: ['Coming soon '],
+      image: '/images/comingsoon.webp'
+    },
+    {
+      id: '',
+      name: 'DaVinci',
+      description: 'Library Management Sysytem',
+      technologies: ['C#', '.NET MUAI', 'Blazor'],
+      image: '/images/comingsoon.webp'
+    },
+    {
+      id: '',
+      name: 'Flight-Booking',
+      description: 'Flight Boooking Sytstem',
+      technologies: ['C#', '.NET MUAI', 'Blazor'],
+      image: '/images/comingsoon.webp'
+    },
   ];
 
   useEffect(() => {
@@ -209,7 +230,7 @@ export default function ProjectReveal() {
           </div>
 
           <div 
-            className="preview-window fixed bottom-8 right-8 w-[480px] h-[320px] overflow-hidden shadow-2xl" // Increased size, removed rounded corners
+            className="preview-window fixed bottom-8 right-8 w-[360px] h-[240px] overflow-hidden shadow-2xl rounded-2xl border border-white/10 bg-black/50 backdrop-blur-sm group" // Reduced size, added rounded corners and subtle border
             style={{
               opacity: activeProject ? 1 : 0,
               transform: activeProject ? 'scale(1)' : 'scale(0.8)', // Removed extra scaling

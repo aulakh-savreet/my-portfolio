@@ -88,7 +88,7 @@ export default function NavBar() {
   const navItems = [
     { text: 'GITHUB', link: 'https://github.com/aulakh-savreet' },
     { text: 'LINKEDIN', link: 'https://linkedin.com/in/savreet-aulakh' },
-    { text: 'ABOUT', link: '#about' },
+    { text: 'ABOUT', link: '/about' },
     { text: 'CONTACT', link: '#contact' }
   ];
 
