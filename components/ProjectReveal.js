@@ -16,6 +16,7 @@ export default function ProjectReveal() {
       name: 'Travel Explorer',
       description: 'Dpt.',
       technologies: ['Next.js', 'React', 'Tailwind CSS', 'REST Countries API', 'OpenWeather API', 'SWR', 'Vercel'],
+      clickable: true,
       image: '/images/travel-explorer/hero.webp'
     },
     {
@@ -51,7 +52,7 @@ export default function ProjectReveal() {
       name: 'Flight-Booking',
       description: 'Flight Boooking Sytstem',
       technologies: ['C#', '.NET MUAI', 'Blazor'],
-      image: '/images/comingsoon.webp'
+      image: '/images/FlightBooking.webp'
     },
   ];
 
@@ -198,8 +199,14 @@ export default function ProjectReveal() {
                       onMouseEnter={() => setActiveProject(project)}
                       onMouseLeave={() => setActiveProject(null)}
                       onClick={() => {
-                        sessionStorage.setItem('projectScroll', window.scrollY);
-                        router.push(`/projects/${project.id}`);
+                        if (project.name === 'DaVinci') {
+                          window.open('https://github.com/aulakh-savreet/DaVinci', '_blank');
+                        } else if (project.name === 'Flight-Booking') {
+                          window.open('https://github.com/aulakh-savreet/Flight-Booking', '_blank');
+                        } else if (project.id) { // Only route if project has an ID
+                          sessionStorage.setItem('projectScroll', window.scrollY);
+                          router.push(`/projects/${project.id}`);
+                        }
                       }}
                     >
                       <div className="relative flex items-center">
@@ -222,6 +229,14 @@ export default function ProjectReveal() {
                           </div>
                         )}
                       </div>
+                      {project.name === 'DaVinci' && (
+                        <div 
+                          onClick={() => window.open('https://github.com/aulakh-savreet/DaVinci', '_blank')}
+                          className="cursor-pointer"
+                        >
+                          {/* DaVinci project content */}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

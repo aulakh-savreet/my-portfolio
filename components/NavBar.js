@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Github, Linkedin, Mail, User } from 'lucide-react';
+import Link from 'next/link';
 
 export default function NavBar() {
   const linksRef = useRef([]);
@@ -89,33 +90,44 @@ export default function NavBar() {
     { text: 'GITHUB', link: 'https://github.com/aulakh-savreet' },
     { text: 'LINKEDIN', link: 'https://linkedin.com/in/savreet-aulakh' },
     { text: 'ABOUT', link: '/about' },
-    { text: 'CONTACT', link: '#contact' }
+    { text: 'CONTACT', link: '#Contact' }
   ];
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-12 py-8">
       <div className="flex justify-between items-center">
         {/* Logo/Name */}
-        <div 
+        <Link href="/" // Changed from "to" to "href"
           ref={nameRef}
           className="relative overflow-hidden cursor-pointer"
         >
           <span className="text-3xl font-bold text-white">
             SAV
           </span>
-        </div>
+        </Link>
 
         {/* Navigation Items */}
         <div className="flex gap-12">
           {navItems.map((item, index) => (
-            <a
-              key={index}
-              ref={el => linksRef.current[index] = el}
-              href={item.link}
-              className="text-sm tracking-wider text-white/80 hover:text-white transition-colors"
-            >
-              {item.text}
-            </a>
+            item.link.startsWith('http') ? (
+              <a
+                key={index}
+                ref={el => linksRef.current[index] = el}
+                href={item.link}
+                className="text-sm tracking-wider text-white/80 hover:text-white transition-colors"
+              >
+                {item.text}
+              </a>
+            ) : (
+              <Link
+                key={index}
+                ref={el => linksRef.current[index] = el}
+                href={item.link} // Changed from "to" to "href"
+                className="text-sm tracking-wider text-white/80 hover:text-white transition-colors"
+              >
+                {item.text}
+              </Link>
+            )
           ))}
         </div>
       </div>

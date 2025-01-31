@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import { AppProps } from 'next/app';
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail, Instagram } from 'lucide-react';
 
 export default function Footer() {
   const containerRef = useRef(null);
@@ -127,7 +127,7 @@ export default function Footer() {
           <div className="col-span-12 lg:col-span-6">
             <div className="mb-16">
               <div className="footer-logo w-24 h-24 border-2 border-white rounded-full flex items-center justify-center">
-                <span className="text-2xl font-medium glow-text">sav</span>
+                <span className="text-white text-2xl font-bold">SAV</span>
               </div>
             </div>
 
@@ -269,6 +269,14 @@ export default function Footer() {
                   className="text-white/75 hover:text-white transition-colors glow-text"
                 >
                   <Mail size={20} />
+                </a>
+                <a 
+                  href="https://www.instagram.com/savreeet__/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-white/75 hover:text-white transition-colors glow-text"
+                >
+                  <Instagram size={20} />
                 </a>
               </div>
             </div>
