@@ -14,7 +14,7 @@ export default function ProjectReveal() {
     {
       id: 'travel-explorer',
       name: 'Travel Explorer',
-      description: 'Dpt.',
+      description: 'Travel Information APP',
       technologies: ['Next.js', 'React', 'Tailwind CSS', 'REST Countries API', 'OpenWeather API', 'SWR', 'Vercel'],
       clickable: true,
       image: '/images/travel-explorer/hero.webp'
@@ -22,15 +22,15 @@ export default function ProjectReveal() {
     {
       id: 'task-buddy',
       name: 'Task Buddy',
-      description: 'Interactive historical experience',
+      description: 'Productivity APP',
       technologies: ['Figma', 'Auto-layout', 'Components', 'Variants', 'Design Tokens', 'Prototyping'],
       image: '/images/task-buddy/hero.webp'
     },
     {
       id: 'village-rentals',
       name: 'VIllage Rentals',
-      description: 'Digital art platform',
-      technologies: ['Next.js', 'WebGL', 'Framer Motion'],
+      description: 'Equipment rental System',
+      technologies: ['Python', 'MySQL', 'Figma', 'OOP', 'Tkinter','SQL' ],
       image: '/images/village-rentals/hero.webp'
     },
     {
@@ -51,7 +51,7 @@ export default function ProjectReveal() {
       id: '',
       name: 'Flight-Booking',
       description: 'Flight Boooking Sytstem',
-      technologies: ['C#', '.NET MUAI', 'Blazor'],
+      technologies: ['C#', '.NET MUAI', 'Blazor','HTML','CSS'],
       image: '/images/FlightBooking.webp'
     },
   ];

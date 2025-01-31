@@ -7,6 +7,8 @@ import NavBar from '../components/NavBar';
 import HeroSection from '../components/HeroSection';
 import ProjectReveal from '../components/ProjectReveal';
 import Footer from '../components/Footer';
+import Contact from '../components/Contact';
+
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -95,7 +97,7 @@ export default function Home() {
           </div>
           <ProjectReveal />
         </main>
-
+        <Contact />
         <Footer />
       </div>
       <Analytics />
