@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
 const projectData = {
   id: 'village-rentals',
   title: 'Village Rentals',
-  subtitle: 'Equipment Rental Management System — March 2024',
+  subtitle: 'Equipment Rental Management System — December 2024',
   description: 'A comprehensive equipment rental and management platform',
   imageSrc: '/images/village-rentals/hero.webp',
   details: {

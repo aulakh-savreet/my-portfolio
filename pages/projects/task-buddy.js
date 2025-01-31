@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 const projectData = {
   id: 'task-buddy',
   title: 'TaskBuddy',
-  subtitle: 'Next Generation Task Management — June 2023',
+  subtitle: 'Next Generation Task Management — April 2024',
   description: 'Figma-based Kanban task management with real-time collaboration',
   imageSrc: '/images/task-buddy/main.webp',
   details: {
