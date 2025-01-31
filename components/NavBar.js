@@ -102,7 +102,7 @@ export default function NavBar() {
           className="relative overflow-hidden cursor-pointer"
         >
           <span className="text-3xl font-bold text-white">
-            SAV
+            SAVREET
           </span>
         </Link>
 
