@@ -71,6 +71,14 @@ export default function Home() {
           {/* Hero scrolls normally */}
           <HeroSection />
 
+          {/* Fading “bridge” */}
+          <div
+            style={{
+              height: '100px',
+              background: 'linear-gradient(180deg, #000000, #4C1D95)'
+            }}
+          />
+
           {/* Project section will handle its own GSAP pin logic */}
           <ProjectReveal />
 
