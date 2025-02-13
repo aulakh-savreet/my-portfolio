@@ -2,26 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
 const CustomCursor = ({ isLeftHalf }) => {
+  // Do not render on mobile devices
+  const isMobile = typeof window !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) return null;
+
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
-    // Get references to sections
-    const mainSection = document.querySelector('main');
-    const heroSection = document.querySelector('.hero-element');
-    
     const updateCursor = (e) => {
-      // Get current scroll position
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
-      
-      // Check if we've scrolled past hero (where projects begin)
       const isPassedHero = scrollY >= windowHeight;
-      
-      // Update cursor position
       setPosition({ x: e.clientX, y: e.clientY });
-      
-      // Only show cursor when we've scrolled past hero section
       setIsVisible(isPassedHero);
     };
 
@@ -34,7 +27,7 @@ const CustomCursor = ({ isLeftHalf }) => {
     
     return () => {
       window.removeEventListener('mousemove', updateCursor);
-      window.removeEventListener('scroll', () => {});
+      // (Scroll event cleanup omitted for brevity)
     };
   }, []);
 

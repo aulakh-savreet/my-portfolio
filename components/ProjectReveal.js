@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -6,9 +6,24 @@ export default function ProjectReveal() {
   const containerRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLeftHalf, setIsLeftHalf] = useState(false);
-  const [activeProject, setActiveProject] = useState(null);
   const [showCursor, setShowCursor] = useState(false);
+  const [activeProject, setActiveProject] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
   const router = useRouter();
+
+  // Check for mobile once on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      setIsMobile(isMobileDevice);
+      
+      // If on mobile, disable any GSAP ScrollTrigger animations
+      if (isMobileDevice && window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      }
+    }
+  }, []);
 
   const projects = [
     {
@@ -16,7 +31,6 @@ export default function ProjectReveal() {
       name: 'Travel Explorer',
       description: 'Travel Information APP',
       technologies: ['Next.js', 'React', 'Tailwind CSS', 'REST Countries API', 'OpenWeather API', 'SWR', 'Vercel'],
-      clickable: true,
       image: '/images/travel-explorer/hero.webp'
     },
     {
@@ -30,142 +44,94 @@ export default function ProjectReveal() {
       id: 'village-rentals',
       name: 'VIllage Rentals',
       description: 'Equipment rental System',
-      technologies: ['Python', 'MySQL', 'Figma', 'OOP', 'Tkinter','SQL' ],
+      technologies: ['Python', 'MySQL', 'Figma', 'OOP', 'Tkinter', 'SQL'],
       image: '/images/village-rentals/hero.webp'
     },
     {
-      id: 'Odyssey-detaling ',
+      id: 'Odyssey-detaling',
       name: 'Odyssey Detaling',
       description: 'Car detaling website',
-      technologies: ['Coming soon '],
+      technologies: ['Coming soon'],
       image: '/images/comingsoon.webp'
     },
     {
       id: '',
       name: 'DaVinci',
-      description: 'Library Management Sysytem',
-      technologies: ['C#', '.NET MUAI', 'Blazor'],
+      description: 'Library Management System',
+      technologies: ['C#', '.NET MAUI', 'Blazor'],
       image: '/images/comingsoon.webp'
     },
     {
       id: '',
       name: 'Flight-Booking',
-      description: 'Flight Boooking Sytstem',
-      technologies: ['C#', '.NET MUAI', 'Blazor','HTML','CSS'],
+      description: 'Flight Boooking System',
+      technologies: ['C#', '.NET MAUI', 'Blazor', 'HTML', 'CSS'],
       image: '/images/FlightBooking.webp'
     },
   ];
 
+  // Desktop-only mouse logic
   useEffect(() => {
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
-    if (!gsap || !ScrollTrigger || !containerRef.current) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-    ScrollTrigger.getAll().forEach(st => st.kill());
-
-    gsap.set(containerRef.current, { 
-      backgroundColor: '#000000',
-      y: '100vh'
-    });
-
-    gsap.set('.project-item', { 
-      opacity: 0,
-      y: 50
-    });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: 'main',
-        start: 'top top',
-        end: '+=200%',
-        scrub: 1,
-        pin: true,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          if (progress > 0) {
-            gsap.to('.hero-element', {
-              y: -100 * progress,
-              opacity: 1 - progress * 2,
-              duration: 0.1
-            });
-          }
-        }
-      }
-    });
-
-    tl.to(containerRef.current, {
-      y: 0,
-      duration: 1,
-      ease: 'power2.inOut'
-    }).to('.project-item', {
-      opacity: 1,
-      y: 0,
-      stagger: 0.1,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, '-=0.5');
+    if (!containerRef.current || isMobile) return;
 
     const handleMouseMove = (e) => {
-      if (!containerRef.current) return;
-      
       const rect = containerRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
-      const y = e.clientY;
-      
-      // Check if mouse is in the container bounds
-      const isInBounds = 
-        y >= rect.top && 
-        y <= rect.bottom && 
-        x >= 0 && 
-        x <= rect.width;
+      const y = e.clientY - rect.top;
 
+      const isInBounds = x >= 0 && y >= 0 && x <= rect.width && y <= rect.height;
       setShowCursor(isInBounds);
-      
+
       if (isInBounds) {
-        setMousePosition({ x: e.clientX, y });
+        setMousePosition({ x: e.clientX, y: e.clientY });
         setIsLeftHalf(x < rect.width / 2);
-        gsap.to(containerRef.current, {
-          backgroundColor: x < rect.width / 2 ? '#4C1D95' : '#000000',
-          duration: 0.3
-        });
       } else {
         setIsLeftHalf(false);
-        gsap.to(containerRef.current, {
-          backgroundColor: '#000000',
-          duration: 0.3
-        });
       }
     };
 
     const handleMouseLeave = () => {
       setShowCursor(false);
       setIsLeftHalf(false);
-      gsap.to(containerRef.current, {
-        backgroundColor: '#000000',
-        duration: 0.3
-      });
     };
 
-    const currentContainer = containerRef.current;
-    currentContainer.addEventListener('mousemove', handleMouseMove);
-    currentContainer.addEventListener('mouseleave', handleMouseLeave);
+    const current = containerRef.current;
+    current.addEventListener('mousemove', handleMouseMove);
+    current.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      currentContainer.removeEventListener('mousemove', handleMouseMove);
-      currentContainer.removeEventListener('mouseleave', handleMouseLeave);
-      ScrollTrigger.getAll().forEach(st => st.kill());
-      gsap.killTweensOf(['.project-item', '.hero-element', currentContainer]);
-      gsap.set(['.project-item', '.hero-element', currentContainer], { clearProps: 'all' });
+      current.removeEventListener('mousemove', handleMouseMove);
+      current.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, []);
+  }, [isMobile]);
+
+  const containerStyle = {
+    backgroundColor: isMobile
+      ? '#4C1D95'
+      : isLeftHalf
+        ? '#4C1D95'
+        : '#000000',
+    transition: 'background-color 0.3s ease'
+  };
+
+  const handleProjectClick = (project) => {
+    if (project.name === 'DaVinci') {
+      window.open('https://github.com/aulakh-savreet/DaVinci', '_blank');
+    } else if (project.name === 'Flight-Booking') {
+      window.open('https://github.com/aulakh-savreet/Flight-Booking', '_blank');
+    } else if (project.id) {
+      sessionStorage.setItem('projectScroll', window.scrollY);
+      router.push(`/projects/${project.id}`);
+    }
+  };
 
   return (
     <>
-      {showCursor && (
-        <div 
+      {/* Desktop custom cursor */}
+      {!isMobile && showCursor && (
+        <div
           className="fixed pointer-events-none z-50 transition-transform duration-100"
-          style={{ 
+          style={{
             left: mousePosition.x,
             top: mousePosition.y,
             transform: `translate(-50%, -50%) scale(${isLeftHalf ? 1 : 0})`,
@@ -181,89 +147,87 @@ export default function ProjectReveal() {
         </div>
       )}
 
-      <div 
-        ref={containerRef} 
-        className="fixed top-0 left-0 w-full h-screen bg-black cursor-none"
-        style={{ zIndex: 30 }}
+      {/* Main container */}
+      <section
+        ref={containerRef}
+        className="relative w-full text-white"
+        style={containerStyle}
       >
-        <div className="relative h-screen">
-          <div className="absolute inset-0 overflow-y-auto">
-            <div className="py-20 px-12 mb-32">
-              <h2 className="text-2xl mb-16 uppercase tracking-wider">Projets</h2>
-              <div className="flex">
-                <div className="w-full max-w-5xl">
-                  {projects.map((project) => (
-                    <div
-                      key={project.id}
-                      className="project-item relative mb-24 group cursor-none"
-                      onMouseEnter={() => setActiveProject(project)}
-                      onMouseLeave={() => setActiveProject(null)}
-                      onClick={() => {
-                        if (project.name === 'DaVinci') {
-                          window.open('https://github.com/aulakh-savreet/DaVinci', '_blank');
-                        } else if (project.name === 'Flight-Booking') {
-                          window.open('https://github.com/aulakh-savreet/Flight-Booking', '_blank');
-                        } else if (project.id) { // Only route if project has an ID
-                          sessionStorage.setItem('projectScroll', window.scrollY);
-                          router.push(`/projects/${project.id}`);
-                        }
-                      }}
-                    >
-                      <div className="relative flex items-center">
-                        <div className="flex-shrink-0">
-                          <h3 className="text-6xl font-light mb-4 text-white tracking-tight">
-                            {project.name}
-                          </h3>
-                          <p className="text-xl text-white/60">{project.description}</p>
-                        </div>
-                        {isLeftHalf && (
-                          <div className="flex gap-3 ml-8 opacity-0 transform translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                            {project.technologies.map((tech, index) => (
-                              <span
-                                key={index}
-                                className="px-3 py-1 text-sm bg-[#F5E6C4] text-black rounded-sm"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      {project.name === 'DaVinci' && (
-                        <div 
-                          onClick={() => window.open('https://github.com/aulakh-savreet/DaVinci', '_blank')}
-                          className="cursor-pointer"
-                        >
-                          {/* DaVinci project content */}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+        <div className="max-w-6xl mx-auto px-6 py-12 md:py-20">
+          <h2 className="text-2xl mb-6 uppercase tracking-wider">Projects</h2>
+
+          {/* Projects List */}
+          <div className={isMobile ? "space-y-16" : "space-y-24"}>
+            {projects.map((project) => (
+              <div key={project.name}>
+                {/* Mobile Preview Window */}
+                {isMobile && (
+                  <div className="w-full h-64 mb-8 overflow-hidden shadow-2xl rounded-2xl border border-white/10 bg-black/50 backdrop-blur-sm">
+                    <img
+                      src={project.image}
+                      alt={project.name}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                )}
+
+                {/* Project Content */}
+                <div
+                  className="project-item relative group"
+                  style={{ cursor: isMobile ? 'pointer' : 'none' }}
+                  onMouseEnter={() => !isMobile && setActiveProject(project)}
+                  onMouseLeave={() => !isMobile && setActiveProject(null)}
+                  onClick={() => handleProjectClick(project)}
+                >
+                  {/* Project Name */}
+                  <h3 className="text-5xl md:text-6xl font-light mb-4 text-white tracking-tight">
+                    {project.name}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-xl text-white/60 mb-6">
+                    {project.description}
+                  </p>
+
+                  {/* Technologies - Always visible on mobile */}
+                  <div className={`flex flex-wrap gap-3 mt-4 ${isMobile ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0'} transition-all duration-300`}>
+                    {project.technologies.map((tech, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 text-sm bg-[#F5E6C4] text-black rounded-sm"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
+        </div>
 
-          <div 
-            className="preview-window fixed bottom-8 right-8 w-[360px] h-[240px] overflow-hidden shadow-2xl rounded-2xl border border-white/10 bg-black/50 backdrop-blur-sm group" // Reduced size, added rounded corners and subtle border
+        {/* Desktop Preview Window */}
+        {!isMobile && (
+          <div
+            className="fixed bottom-8 right-8 w-[360px] h-[240px] overflow-hidden shadow-2xl rounded-2xl border border-white/10 bg-black/50 backdrop-blur-sm"
             style={{
               opacity: activeProject ? 1 : 0,
-              transform: activeProject ? 'scale(1)' : 'scale(0.8)', // Removed extra scaling
-              zIndex: 40,
+              transform: activeProject ? 'scale(1)' : 'scale(0.8)',
               pointerEvents: 'none',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              zIndex: 40
             }}
           >
             {activeProject && (
               <img
                 src={activeProject.image}
                 alt={activeProject.name}
-                className="w-full h-full object-cover object-center" // Removed scale-105
+                className="w-full h-full object-cover object-center"
               />
             )}
           </div>
-        </div>
-      </div>
+        )}
+      </section>
     </>
   );
 }

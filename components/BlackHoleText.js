@@ -25,7 +25,6 @@ export default function BlackHoleText() {
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   if (isMobile) {
-    // Reduce particle count on mobile for better performance
     if (this.data && this.data.amount) {
       this.data.amount = Math.floor(this.data.amount * 0.5);
     }
@@ -38,7 +37,6 @@ export default function BlackHoleText() {
       const loadFont = () => {
         return new Promise((resolve) => {
           const loader = new FontLoader(manager);
-          // Changed to droid font for demonstration
           loader.load(
             'https://threejs.org/examples/fonts/droid/droid_serif_regular.typeface.json',
             (font) => {
@@ -64,9 +62,6 @@ export default function BlackHoleText() {
         const [font, particle] = await Promise.all([loadFont(), loadTexture()]);
         if (font && particle) {
           envInstance = new Environment(font, particle);
-          /**
-           * Store globally so we can pause/resume later.
-           */
           environment = envInstance;
         }
       } catch (error) {

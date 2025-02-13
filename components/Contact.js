@@ -30,7 +30,6 @@ const Contact = () => {
     setIsSubmitting(true);
     
     try {
-      // Here you would integrate with your form submission backend
       await new Promise(resolve => setTimeout(resolve, 1500));
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' });
@@ -76,12 +75,10 @@ const Contact = () => {
       ref={containerRef}
       className="relative min-h-screen bg-black flex items-center py-24"
     >
-      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-black to-black" />
 
       <div className="relative container mx-auto px-8 z-10">
         <div className="max-w-4xl mx-auto">
-          {/* Section Title */}
           <div className="text-center mb-16 contact-animate">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               Let's Connect
@@ -91,9 +88,7 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Contact Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Form Section */}
             <div className="contact-animate">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -168,7 +163,6 @@ const Contact = () => {
               </form>
             </div>
 
-            {/* Social Links Section */}
             <div className="space-y-8 contact-animate">
               <div className="bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10">
                 <h3 className="text-xl font-medium mb-6 text-white">Get in touch</h3>

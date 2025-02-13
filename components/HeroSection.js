@@ -1,15 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import PixelBackground from './PixelBackground';
 import dynamic from 'next/dynamic';
-
-const ShaderBackground = dynamic(() => import('./ShaderBackground'), {
-  ssr: false
-});
+import ShaderBackground from './ShaderBackground';
 
 export default function HeroSection() {
   const mainTextRef = useRef(null);
   const subtitle1Ref = useRef(null);
   const subtitle2Ref = useRef(null);
+
+  const isMobile = typeof window !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   useEffect(() => {
     const gsap = window.gsap;
@@ -17,7 +16,6 @@ export default function HeroSection() {
 
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
     
-    // Function to create scramble effect
     const scrambleText = (element, finalText, duration = 30) => {
       if (!element) return;
       
@@ -45,7 +43,6 @@ export default function HeroSection() {
       }, duration);
     };
 
-    // Initial load animation
     const texts = [
       {
         ref: mainTextRef.current,
@@ -61,47 +58,38 @@ export default function HeroSection() {
       }
     ];
 
-    // Stagger the initial animations
     texts.forEach((item, index) => {
       setTimeout(() => {
-        // Use faster duration for main text
         const duration = index === 0 ? 15 : 30;
         scrambleText(item.ref, item.text, duration);
-      }, index * 300); // Reduced delay between animations
+      }, index * 300);
     });
 
-    // Add hover effect for main text
     if (mainTextRef.current) {
       mainTextRef.current.addEventListener('mouseenter', () => {
         scrambleText(mainTextRef.current, "Crafting digital experiences through code and creativity", 15);
       });
     }
 
-    // Cleanup
     return () => {
-      // Clean up intervals
       texts.forEach(item => {
         if (item.ref && item.ref.scrambleInterval) {
           clearInterval(item.ref.scrambleInterval);
         }
       });
       
-      // Kill GSAP animations
       gsap.killTweensOf([mainTextRef.current, subtitle1Ref.current, subtitle2Ref.current]);
     };
   }, []);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Background with purple gradient */}
       <div className="hero-element absolute inset-0 bg-gradient-to-b from-purple-900/20 via-black to-black" />
 
-      {/* Pixel Background */}
       <div className="hero-element">
         <PixelBackground />
       </div>
 
-      {/* Black Hole Effect Layer */}
       <div 
         className="hero-element absolute inset-0"
         style={{ 
@@ -112,12 +100,25 @@ export default function HeroSection() {
         <ShaderBackground />
       </div>
 
-      {/* Content Layer */}
       <div className="hero-element absolute inset-0 z-10 flex flex-col items-center">
-        <div className="mt-[60vh] text-center">
+        <div className="mt-[30vh] md:mt-[60vh] text-center">
+          {/* Mobile: SAVREET logo above main text */}
+          {isMobile && (
+            <div className="mb-4">
+              <h1 
+                className="text-3xl font-bold text-white"
+                style={{ 
+                  fontFamily: 'Space Grotesk',
+                  letterSpacing: '0.1em'
+                }}
+              >
+                SAVREET
+              </h1>
+            </div>
+          )}
           <p 
             ref={mainTextRef}
-            className="text-xl text-white/80 mb-8 cursor-pointer"
+            className="text-lg md:text-xl text-white/80 mb-8 cursor-pointer"
             style={{ 
               fontFamily: 'Space Grotesk',
               letterSpacing: '0.1em',
@@ -137,19 +138,18 @@ export default function HeroSection() {
           >
             <div className="flex items-center gap-3">
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
-              <span ref={subtitle1Ref}>FULL-STACK DEVELOPER</span>
+              <span ref={subtitle1Ref} className="text-sm md:text-base">FULL-STACK DEVELOPER</span>
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
             </div>
             <div className="flex items-center gap-3">
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
-              <span ref={subtitle2Ref}>UI/UX DESIGNER</span>
+              <span ref={subtitle2Ref} className="text-sm md:text-base">UI/UX DESIGNER</span>
               <span className="w-1 h-1 rounded-full bg-indigo-500/50" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Animated Scroll Indicator */}
       <div className="hero-element absolute bottom-12 left-1/2 -translate-x-1/2 z-30">
         <span 
           className="block text-white/40 text-sm text-center mb-4"
