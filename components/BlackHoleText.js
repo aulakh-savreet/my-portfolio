@@ -23,12 +23,6 @@ export default function BlackHoleText() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    if (this.data && this.data.amount) {
-      this.data.amount = Math.floor(this.data.amount * 0.5);
-    }
-  }
     let envInstance;
 
     const preload = async () => {
