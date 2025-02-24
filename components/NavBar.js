@@ -23,7 +23,7 @@ export default function NavBar() {
   }, []);
 
   useEffect(() => {
-    // Check for mobile devices
+    // Check for mobile devices - MOVED TO THE TOP OF USEEFFECT
     const checkMobile = () => {
       setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     };
@@ -63,58 +63,62 @@ export default function NavBar() {
       });
     }
 
-    // Text scramble effect cleanup functions
+    // Text scramble effect - ONLY APPLY ON DESKTOP
     const textScrambleCleanups = [];
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
-    linksRef.current.forEach((link) => {
-      if (!link) return;
-      const originalText = link.textContent;
-      let interval;
+    
+    // Skip hover effects completely on mobile
+    if (!isMobile) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
+      linksRef.current.forEach((link) => {
+        if (!link) return;
+        const originalText = link.textContent;
+        let interval;
 
-      const handleHover = () => {
-        let iteration = 0;
-        clearInterval(interval);
+        const handleHover = () => {
+          let iteration = 0;
+          clearInterval(interval);
 
-        interval = setInterval(() => {
-          link.textContent = originalText
-            .split('')
-            .map((letter, index) => {
-              if (index < iteration) {
-                return originalText[index];
-              }
-              return chars[Math.floor(Math.random() * chars.length)];
-            })
-            .join('');
+          interval = setInterval(() => {
+            link.textContent = originalText
+              .split('')
+              .map((letter, index) => {
+                if (index < iteration) {
+                  return originalText[index];
+                }
+                return chars[Math.floor(Math.random() * chars.length)];
+              })
+              .join('');
 
-          if (iteration >= originalText.length) {
-            clearInterval(interval);
-            link.textContent = originalText;
-          }
-          iteration += 1 / 3;
-        }, 30);
-      };
+            if (iteration >= originalText.length) {
+              clearInterval(interval);
+              link.textContent = originalText;
+            }
+            iteration += 1 / 3;
+          }, 30);
+        };
 
-      const handleLeave = () => {
-        clearInterval(interval);
-        link.textContent = originalText;
-      };
+        const handleLeave = () => {
+          clearInterval(interval);
+          link.textContent = originalText;
+        };
 
-      link.addEventListener('mouseenter', handleHover);
-      link.addEventListener('mouseleave', handleLeave);
+        link.addEventListener('mouseenter', handleHover);
+        link.addEventListener('mouseleave', handleLeave);
 
-      // Store cleanup for this link
-      textScrambleCleanups.push(() => {
-        link.removeEventListener('mouseenter', handleHover);
-        link.removeEventListener('mouseleave', handleLeave);
+        // Store cleanup for this link
+        textScrambleCleanups.push(() => {
+          link.removeEventListener('mouseenter', handleHover);
+          link.removeEventListener('mouseleave', handleLeave);
+        });
       });
-    });
+    }
 
     return () => {
       window.removeEventListener('resize', checkMobile);
       textScrambleCleanups.forEach((cleanup) => cleanup());
       glowTimeline.kill();
     };
-  }, []);
+  }, [isMobile]); // Added isMobile as a dependency to re-run if it changes
 
   const navItems = [
     { text: 'GITHUB', link: 'https://github.com/aulakh-savreet' },

@@ -2,7 +2,17 @@
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 
-const BlackHoleText = dynamic(() => import('./BlackHoleText'), {
+// Only import BlackHoleText on non-mobile devices
+const BlackHoleText = dynamic(() => {
+  // Check if we're on the client and if it's mobile
+  if (typeof window !== 'undefined' && 
+      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    // Return an empty component for mobile
+    return Promise.resolve(() => null);
+  }
+  // Only import the real component on desktop
+  return import('./BlackHoleText');
+}, {
   ssr: false
 });
 
