@@ -136,7 +136,6 @@ const AboutPage = () => {
           const t = s / segments;
           const dist = startDist * (1 - t * 0.7);
           
-          // Spiral toward center with wave
           const spiralAngle = baseAngle + t * 0.5 + Math.sin(time + i) * 0.3;
           const wave = Math.sin(t * 8 + time * 2 + i) * 30 * (1 - t);
           
